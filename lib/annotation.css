@@ -1,0 +1,128 @@
+/* Annotation Styles */
+.annotation-highlight {
+  background-color: rgba(255, 230, 0, 0.4);
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background-color 0.2s;
+}
+
+.annotation-highlight:hover {
+  background-color: rgba(255, 230, 0, 0.7);
+}
+
+/* Annotation Popup */
+.annotation-popup {
+  position: absolute;
+  z-index: 10000;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  padding: 12px;
+  max-width: 300px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.annotation-popup textarea {
+  width: 100%;
+  min-height: 60px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px;
+  font-size: 14px;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.annotation-popup-buttons {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.annotation-popup button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.annotation-popup .save-btn {
+  background: #3b82f6;
+  color: white;
+}
+
+.annotation-popup .save-btn:hover {
+  background: #2563eb;
+}
+
+.annotation-popup .cancel-btn {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.annotation-popup .cancel-btn:hover {
+  background: #d1d5db;
+}
+
+/* Tooltip for viewing comments */
+.annotation-tooltip {
+  position: absolute;
+  z-index: 10001;
+  background: #1f2937;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  max-width: 250px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  line-height: 1.4;
+}
+
+.annotation-tooltip::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 20px;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid #1f2937;
+}
+
+/* Add annotation button that appears on text selection */
+.annotation-add-btn {
+  position: absolute;
+  z-index: 10000;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.annotation-add-btn:hover {
+  background: #2563eb;
+}
+
+/* Dark mode support */
+[data-theme="dark"] .annotation-popup {
+  background: #1e293b;
+  border-color: #475569;
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .annotation-popup textarea {
+  background: #334155;
+  border-color: #475569;
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .annotation-popup .cancel-btn {
+  background: #475569;
+  color: #f1f5f9;
+}

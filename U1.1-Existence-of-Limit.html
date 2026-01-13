@@ -194,7 +194,7 @@
             font-size: 18px;
         }
 
-        /* Learning Objectives */
+        /* Key Points */
         .objectives-list {
             list-style: none;
             padding: 0;
@@ -400,8 +400,40 @@
             border: 1px solid var(--border-color);
         }
 
-        .problem-type-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+        .problem-type-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .problem-type-header:hover { opacity: 0.85; }
         .problem-type-title { font-size: 1.2rem; font-weight: 700; }
+
+        /* Accordion toggle icon */
+        .toggle-icon {
+            font-size: 0.9rem;
+            transition: transform 0.3s ease;
+            margin-left: auto;
+            padding-left: 15px;
+        }
+        .problem-type.collapsed .toggle-icon { transform: rotate(-90deg); }
+
+        /* Accordion content */
+        .problem-type-content {
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+            max-height: 2000px;
+            opacity: 1;
+        }
+        .problem-type.collapsed .problem-type-content {
+            max-height: 0;
+            opacity: 0;
+        }
+        .problem-type.collapsed .problem-type-header { margin-bottom: 0; }
 
         .difficulty-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
         .difficulty-badge.easy { background: rgba(16, 185, 129, 0.15); color: var(--accent-success); }
@@ -1115,7 +1147,81 @@
             .pattern-box, .exam-tip, .definition-box, .step-reasoning { border-width: 2px; }
             .difficulty-badge, .freq-badge, .level-badge { border: 2px solid currentColor; }
         }
+
+        /* ========== TRANSLATION POPUP ========== */
+        .translate-popup {
+            position: absolute;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            padding: 8px;
+            z-index: 10000;
+            animation: translateFadeIn 0.2s ease;
+            max-width: 350px;
+        }
+
+        @keyframes translateFadeIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(-5px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        .translate-btn {
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .translate-btn:hover { background: #2563eb; transform: scale(1.02); }
+        .translate-btn:disabled { background: var(--text-muted); cursor: not-allowed; transform: none; }
+
+        .translation-result {
+            margin-top: 8px;
+            padding: 10px 12px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-primary);
+            word-wrap: break-word;
+        }
+
+        .translation-error {
+            color: var(--accent-danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* Arrow pointing down (popup above selection) */
+        .translate-popup::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: var(--bg-primary);
+        }
+
+        /* Arrow pointing up (popup below selection) */
+        .translate-popup.below::after {
+            top: -8px;
+            bottom: auto;
+            border-top-color: transparent;
+            border-bottom-color: var(--bg-primary);
+        }
     </style>
+
+    <!-- Custom Annotation System -->
+    <link rel="stylesheet" href="lib/annotation.css">
 </head>
 <body>
     <!-- Skip Link for Keyboard Navigation -->
@@ -1156,7 +1262,7 @@
 
         <!-- Navigation -->
         <nav id="main-content" class="nav-tabs">
-            <button class="nav-tab active" onclick="showPanel('objectives')">🎯 Objectives</button>
+            <button class="nav-tab active" onclick="showPanel('objectives')">🎯 Key Points</button>
             <button class="nav-tab" onclick="showPanel('prerequisites')">📋 Prerequisites</button>
             <button class="nav-tab" onclick="showPanel('concepts')">💡 Concepts</button>
             <button class="nav-tab" onclick="showPanel('problems')">📝 Problem Types</button>
@@ -1166,18 +1272,18 @@
             <button class="nav-tab" onclick="showPanel('connections')">🔗 Connections</button>
         </nav>
 
-        <!-- ==================== LEARNING OBJECTIVES ==================== -->
+        <!-- ==================== KEY POINTS ==================== -->
         <div id="objectives" class="content-panel active">
             <section class="section">
-                <h2 class="section-title"><span class="icon">🎯</span> Learning Objectives</h2>
-                <p style="color: var(--text-secondary); margin-bottom: 20px;">After completing this unit, you will be able to:</p>
+                <h2 class="section-title"><span class="icon">🎯</span> Key Points</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 20px;">Key facts to remember:</p>
 
                 <ul class="objectives-list">
-                    <li>Estimate limit values from graphs by analyzing left-hand and right-hand behavior</li>
-                    <li>Estimate limit values from tables of function values</li>
-                    <li>Determine when a limit does not exist and explain why (jump, infinity, or oscillation)</li>
-                    <li>Use proper limit notation including one-sided limits (\(x \to a^-\) and \(x \to a^+\))</li>
-                    <li>Distinguish between the limit of a function at a point and the value of the function at that point</li>
+                    <li>A limit describes where \(f(x)\) is heading as \(x\) approaches a value, not where it actually is</li>
+                    <li>A limit exists only when the left-hand limit equals the right-hand limit</li>
+                    <li>Three reasons a limit does not exist (DNE): jump discontinuity (left ≠ right), infinite behavior, or oscillation</li>
+                    <li>The limit \(\displaystyle\lim_{x \to a} f(x)\) can differ from the function value \(f(a)\)</li>
+                    <li>Notation: \(x \to a^-\) means approaching from the left; \(x \to a^+\) means approaching from the right</li>
                 </ul>
 
                 <div class="definition-box" style="margin-top: 30px;">
@@ -1304,6 +1410,34 @@
                                 <div class="concept-icon">📈</div>
                                 <div class="concept-title">Asymptote</div>
                                 <div class="concept-description">Function → ∞. May be ±∞ or DNE.</div>
+                            </div>
+                        </div>
+
+                        <!-- Decision Flowchart: Identify Discontinuity Type -->
+                        <div class="decision-flowchart" style="margin: 20px 0;">
+                            <div class="flowchart-title">Decision Flowchart: Identify the Discontinuity Type</div>
+                            <div class="flowchart-container">
+                                <div class="flowchart-node question">Is there a gap or break in the graph at x = a?</div>
+                                <div class="flowchart-arrow">↓</div>
+                                <div class="flowchart-branch">
+                                    <div class="flowchart-branch-item">
+                                        <div class="flowchart-branch-label yes">SINGLE POINT MISSING</div>
+                                        <div class="flowchart-node answer">⭕ HOLE<br><small>Limit EXISTS!</small></div>
+                                    </div>
+                                    <div class="flowchart-branch-item">
+                                        <div class="flowchart-branch-label no">CURVE JUMPS</div>
+                                        <div class="flowchart-node answer" style="border-color: var(--accent-warning); color: var(--accent-warning);">📍 JUMP<br><small>Limit DNE (L≠R)</small></div>
+                                    </div>
+                                    <div class="flowchart-branch-item">
+                                        <div class="flowchart-branch-label no">GOES TO ±∞</div>
+                                        <div class="flowchart-node answer" style="border-color: var(--accent-danger); color: var(--accent-danger);">📈 ASYMPTOTE<br><small>Check both sides</small></div>
+                                    </div>
+                                </div>
+                                <div class="flowchart-arrow" style="margin-top: 15px;">↓</div>
+                                <div class="flowchart-node question" style="font-size: 0.9rem;">
+                                    Key insight: A HOLE doesn't break the limit!<br>
+                                    The limit still equals where the curve heads.
+                                </div>
                             </div>
                         </div>
 
@@ -1437,6 +1571,40 @@
                         The two-sided limit exists if and only if BOTH one-sided limits exist AND are equal:<br>
                         \(\lim_{x \to a^-} f(x) = \lim_{x \to a^+} f(x) = L \implies \lim_{x \to a} f(x) = L\)
                     </div>
+
+                    <!-- Decision Flowchart: Limit vs Function Value -->
+                    <div class="decision-flowchart" style="margin-top: 20px;">
+                        <div class="flowchart-title">Decision Flowchart: Limit vs Function Value</div>
+                        <div class="flowchart-container">
+                            <div class="flowchart-node question">What are you asked to find?</div>
+                            <div class="flowchart-arrow">↓</div>
+                            <div class="flowchart-branch">
+                                <div class="flowchart-branch-item">
+                                    <div class="flowchart-branch-label yes">lim f(x) as x→a</div>
+                                    <div class="flowchart-node answer" style="font-size: 0.85rem;">Track where curve HEADS<br><small>(ignore actual point)</small></div>
+                                </div>
+                                <div class="flowchart-branch-item">
+                                    <div class="flowchart-branch-label no">f(a)</div>
+                                    <div class="flowchart-node answer" style="font-size: 0.85rem;">Look at actual point<br><small>(the defined value)</small></div>
+                                </div>
+                            </div>
+                            <div class="flowchart-arrow" style="margin-top: 15px;">↓</div>
+                            <div class="flowchart-node question" style="background: rgba(245, 158, 11, 0.15); border-color: var(--accent-warning);">
+                                Are lim f(x) and f(a) equal?
+                            </div>
+                            <div class="flowchart-arrow">↓</div>
+                            <div class="flowchart-branch">
+                                <div class="flowchart-branch-item">
+                                    <div class="flowchart-branch-label yes">YES</div>
+                                    <div class="flowchart-node answer">Continuous at a!</div>
+                                </div>
+                                <div class="flowchart-branch-item">
+                                    <div class="flowchart-branch-label no">NO</div>
+                                    <div class="flowchart-node answer" style="border-color: var(--accent-danger); color: var(--accent-danger);">Discontinuity at a</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- 1.3 & 1.4 Estimation -->
@@ -1467,7 +1635,7 @@
         <div id="problems" class="content-panel">
             <section class="section">
                 <h2 class="section-title"><span class="icon">📝</span> Problem Types</h2>
-                <p style="color: var(--text-secondary); margin-bottom: 20px;">Master these four problem types that appear on the AP exam.</p>
+                <p style="color: var(--text-secondary); margin-bottom: 20px;">Master these five problem types that appear on the AP exam. Click on each type to expand.</p>
 
                 <!-- METHOD SELECTION FRAMEWORK -->
                 <div class="method-framework">
@@ -1541,13 +1709,15 @@
                 </div>
 
                 <!-- TYPE 1: Graph-Based Two-Sided -->
-                <div class="problem-type" id="problem-type-1">
+                <div class="problem-type collapsed" id="problem-type-1">
                     <div class="problem-type-header">
                         <span class="problem-type-title">Type 1: Two-Sided Limit from Graph</span>
                         <span class="difficulty-badge easy">Basic</span>
                         <span class="freq-badge standard">📚 Standard</span>
+                        <span class="toggle-icon">▼</span>
                     </div>
 
+                    <div class="problem-type-content">
                     <div class="pattern-box">
                         <div class="pattern-title">🔍 Recognition Pattern</div>
                         <div class="pattern-do">
@@ -1601,16 +1771,19 @@
                         <div class="exam-tip-label">🎯 AP Exam Tip #3</div>
                         Even with a hole at (2, 3) and a dot at (2, 5), if both sides approach 3, then \(\lim_{x \to 2} f(x) = 3\). The hole doesn't affect the limit!
                     </div>
+                    </div>
                 </div>
 
                 <!-- TYPE 2: One-Sided Limits -->
-                <div class="problem-type" id="problem-type-2">
+                <div class="problem-type collapsed" id="problem-type-2">
                     <div class="problem-type-header">
                         <span class="problem-type-title">Type 2: One-Sided Limits</span>
                         <span class="difficulty-badge easy">Basic</span>
                         <span class="freq-badge standard">📚 Standard</span>
+                        <span class="toggle-icon">▼</span>
                     </div>
 
+                    <div class="problem-type-content">
                     <div class="pattern-box">
                         <div class="pattern-title">🔍 Recognition Pattern</div>
                         <div class="pattern-do">
@@ -1658,16 +1831,19 @@
                         <div class="exam-tip-label">🎯 AP Exam Tip #4</div>
                         When left limit ≠ right limit, the two-sided limit <strong>does not exist (DNE)</strong>. Always check both sides before concluding a two-sided limit exists.
                     </div>
+                    </div>
                 </div>
 
                 <!-- TYPE 3: Piecewise Functions -->
-                <div class="problem-type" id="problem-type-3">
+                <div class="problem-type collapsed" id="problem-type-3">
                     <div class="problem-type-header">
                         <span class="problem-type-title">Type 3: Piecewise Function Limits</span>
                         <span class="difficulty-badge medium">Intermediate</span>
                         <span class="freq-badge standard">📚 Standard</span>
+                        <span class="toggle-icon">▼</span>
                     </div>
 
+                    <div class="problem-type-content">
                     <div class="pattern-box">
                         <div class="pattern-title">🔍 Recognition Pattern</div>
                         <div class="pattern-do">
@@ -1681,6 +1857,50 @@
                         <div class="pattern-dont">
                             <span class="pattern-icon">✗</span>
                             <span>Don't use: The \(x = a\) piece for limits — that only gives f(a), not the limit!</span>
+                        </div>
+                    </div>
+
+                    <!-- Decision Flowchart: Piecewise Functions -->
+                    <div class="decision-flowchart">
+                        <div class="flowchart-title">Decision Flowchart: Piecewise Function Limits</div>
+                        <div class="flowchart-container">
+                            <div class="flowchart-node question">Finding \(\lim_{x \to a}\) of a piecewise function?</div>
+                            <div class="flowchart-arrow">↓</div>
+                            <div class="flowchart-node question" style="background: rgba(245, 158, 11, 0.15); border-color: var(--accent-warning);">
+                                Which limit are you finding?
+                            </div>
+                            <div class="flowchart-arrow">↓</div>
+                            <div class="flowchart-branch">
+                                <div class="flowchart-branch-item">
+                                    <div class="flowchart-branch-label yes">LEFT (x→a⁻)</div>
+                                    <div class="flowchart-node answer" style="font-size: 0.85rem;">Use "x &lt; a" formula</div>
+                                </div>
+                                <div class="flowchart-branch-item">
+                                    <div class="flowchart-branch-label yes">RIGHT (x→a⁺)</div>
+                                    <div class="flowchart-node answer" style="font-size: 0.85rem;">Use "x &gt; a" formula</div>
+                                </div>
+                                <div class="flowchart-branch-item">
+                                    <div class="flowchart-branch-label no">TWO-SIDED</div>
+                                    <div class="flowchart-node answer" style="font-size: 0.85rem;">Calculate BOTH</div>
+                                </div>
+                            </div>
+                            <div class="flowchart-arrow" style="margin-top: 15px;">↓</div>
+                            <div class="flowchart-node question">For two-sided: Do left and right match?</div>
+                            <div class="flowchart-arrow">↓</div>
+                            <div class="flowchart-branch">
+                                <div class="flowchart-branch-item">
+                                    <div class="flowchart-branch-label yes">MATCH</div>
+                                    <div class="flowchart-node answer">Limit = that value</div>
+                                </div>
+                                <div class="flowchart-branch-item">
+                                    <div class="flowchart-branch-label no">DON'T MATCH</div>
+                                    <div class="flowchart-node answer" style="border-color: var(--accent-danger); color: var(--accent-danger);">Limit DNE</div>
+                                </div>
+                            </div>
+                            <div class="flowchart-arrow" style="margin-top: 15px;">↓</div>
+                            <div class="flowchart-node question" style="font-size: 0.85rem; background: rgba(239, 68, 68, 0.1); border-color: var(--accent-danger);">
+                                ⚠️ NEVER use the "x = a" piece for limits!<br>That only tells you f(a), not the limit.
+                            </div>
                         </div>
                     </div>
 
@@ -1715,16 +1935,19 @@
                         <div class="exam-tip-label">🎯 AP Exam Tip #5</div>
                         For piecewise limits: Left side uses the "x < a" formula, Right side uses the "x > a" formula. The "x = a" piece (if any) is irrelevant for the limit!
                     </div>
+                    </div>
                 </div>
 
                 <!-- TYPE 4: Table-Based -->
-                <div class="problem-type" id="problem-type-4">
+                <div class="problem-type collapsed" id="problem-type-4">
                     <div class="problem-type-header">
                         <span class="problem-type-title">Type 4: Table-Based Limit Estimation</span>
                         <span class="difficulty-badge easy">Basic</span>
                         <span class="freq-badge high-priority">🔥 High Priority</span>
+                        <span class="toggle-icon">▼</span>
                     </div>
 
+                    <div class="problem-type-content">
                     <div class="pattern-box">
                         <div class="pattern-title">🔍 Recognition Pattern</div>
                         <div class="pattern-do">
@@ -1782,16 +2005,19 @@
                         <div class="exam-tip-label">🎯 AP Exam Tip #6</div>
                         MEMORIZE: \(\lim_{x \to 0} \frac{\sin x}{x} = 1\). This fundamental limit appears frequently and is key for finding the derivative of sin(x).
                     </div>
+                    </div>
                 </div>
 
                 <!-- TYPE 5: Limits Involving Infinity -->
-                <div class="problem-type" id="problem-type-5">
+                <div class="problem-type collapsed" id="problem-type-5">
                     <div class="problem-type-header">
                         <span class="problem-type-title">Type 5: Limits Involving Infinity</span>
                         <span class="difficulty-badge medium">Intermediate</span>
                         <span class="freq-badge high-priority">🔥 High Priority</span>
+                        <span class="toggle-icon">▼</span>
                     </div>
 
+                    <div class="problem-type-content">
                     <div class="pattern-box">
                         <div class="pattern-title">🔍 Recognition Pattern</div>
                         <div class="pattern-do">
@@ -1805,6 +2031,46 @@
                         <div class="pattern-dont">
                             <span class="pattern-icon">✗</span>
                             <span>Don't: Write "∞" as the limit — the limit DNE when sides disagree (one is +∞, other is -∞)</span>
+                        </div>
+                    </div>
+
+                    <!-- Decision Flowchart: Infinity Limits -->
+                    <div class="decision-flowchart">
+                        <div class="flowchart-title">Decision Flowchart: Limits Involving Infinity</div>
+                        <div class="flowchart-container">
+                            <div class="flowchart-node question">Does the function approach ±∞ at x = a?</div>
+                            <div class="flowchart-arrow">↓</div>
+                            <div class="flowchart-node question" style="background: rgba(245, 158, 11, 0.15); border-color: var(--accent-warning);">
+                                Check: What does each side approach?
+                            </div>
+                            <div class="flowchart-arrow">↓</div>
+                            <div class="flowchart-branch">
+                                <div class="flowchart-branch-item">
+                                    <div class="flowchart-branch-label yes">LEFT (x→a⁻)</div>
+                                    <div class="flowchart-node answer" style="font-size: 0.9rem;">+∞ or -∞?</div>
+                                </div>
+                                <div class="flowchart-branch-item">
+                                    <div class="flowchart-branch-label yes">RIGHT (x→a⁺)</div>
+                                    <div class="flowchart-node answer" style="font-size: 0.9rem;">+∞ or -∞?</div>
+                                </div>
+                            </div>
+                            <div class="flowchart-arrow" style="margin-top: 15px;">↓</div>
+                            <div class="flowchart-node question">Do both sides agree?</div>
+                            <div class="flowchart-arrow">↓</div>
+                            <div class="flowchart-branch">
+                                <div class="flowchart-branch-item">
+                                    <div class="flowchart-branch-label yes">BOTH +∞</div>
+                                    <div class="flowchart-node answer">lim = +∞</div>
+                                </div>
+                                <div class="flowchart-branch-item">
+                                    <div class="flowchart-branch-label yes">BOTH -∞</div>
+                                    <div class="flowchart-node answer">lim = -∞</div>
+                                </div>
+                                <div class="flowchart-branch-item">
+                                    <div class="flowchart-branch-label no">DISAGREE</div>
+                                    <div class="flowchart-node answer" style="border-color: var(--accent-danger); color: var(--accent-danger);">Limit DNE</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -1839,6 +2105,7 @@
                     <div class="exam-tip">
                         <div class="exam-tip-label">🎯 AP Exam Tip #7</div>
                         For vertical asymptotes: If BOTH sides go to +∞, write \(\lim = +\infty\). If BOTH sides go to -∞, write \(\lim = -\infty\). If sides DISAGREE (one +∞, one -∞), the limit <strong>DNE</strong>. This is a common FRQ trap!
+                    </div>
                     </div>
                 </div>
             </section>
@@ -2054,6 +2321,38 @@
                     </ul>
                 </div>
 
+                <!-- Decision Flowchart: Does the Limit Exist? -->
+                <div class="decision-flowchart" style="margin: 25px 0;">
+                    <div class="flowchart-title">Decision Flowchart: Does the Limit Exist?</div>
+                    <div class="flowchart-container">
+                        <div class="flowchart-node question">Step 1: Find the LEFT-hand limit (x → a⁻)</div>
+                        <div class="flowchart-arrow">↓</div>
+                        <div class="flowchart-node question">Step 2: Find the RIGHT-hand limit (x → a⁺)</div>
+                        <div class="flowchart-arrow">↓</div>
+                        <div class="flowchart-node question" style="background: rgba(245, 158, 11, 0.15); border-color: var(--accent-warning);">
+                            Are left and right limits EQUAL?
+                        </div>
+                        <div class="flowchart-arrow">↓</div>
+                        <div class="flowchart-branch">
+                            <div class="flowchart-branch-item">
+                                <div class="flowchart-branch-label yes">YES (L = R)</div>
+                                <div class="flowchart-node answer">Limit = L<br><small>Limit EXISTS!</small></div>
+                            </div>
+                            <div class="flowchart-branch-item">
+                                <div class="flowchart-branch-label no">NO (L ≠ R)</div>
+                                <div class="flowchart-node answer" style="border-color: var(--accent-danger); color: var(--accent-danger);">Limit DNE</div>
+                            </div>
+                        </div>
+                        <div class="flowchart-arrow" style="margin-top: 15px;">↓</div>
+                        <div class="flowchart-node question" style="font-size: 0.9rem; padding: 12px 20px;">
+                            Common DNE reasons:<br>
+                            • Jump (different finite values)<br>
+                            • +∞ vs -∞ disagree<br>
+                            • Oscillation (no settling)
+                        </div>
+                    </div>
+                </div>
+
                 <div class="definition-box">
                     <div class="definition-title">📋 Quick Reference: When Does Limit DNE?</div>
                     <table class="limit-table" style="margin-top: 15px;">
@@ -2107,6 +2406,53 @@
                     <p class="mistake-wrong">"At x=2, use the formula for x=2 to find the limit"</p>
                     <p class="mistake-correct">✓ For limits, use x < 2 formula for left limit, x > 2 formula for right. Ignore x = 2 piece.</p>
                     <p class="mistake-why">Why it happens: Limits are about approaching, not arriving. The x = 2 piece only affects f(2), not the limit.</p>
+                </div>
+
+                <!-- Decision Flowchart: Verify Your Answer -->
+                <div class="decision-flowchart" style="margin-top: 30px;">
+                    <div class="flowchart-title">Checklist Flowchart: Verify Your Limit Answer</div>
+                    <div class="flowchart-container">
+                        <div class="flowchart-node question">Before submitting your answer...</div>
+                        <div class="flowchart-arrow">↓</div>
+                        <div class="flowchart-node question" style="background: rgba(59, 130, 246, 0.15);">
+                            ✓ Did you check BOTH sides?<br><small>(for two-sided limits)</small>
+                        </div>
+                        <div class="flowchart-arrow">↓</div>
+                        <div class="flowchart-branch">
+                            <div class="flowchart-branch-item">
+                                <div class="flowchart-branch-label no">NO</div>
+                                <div class="flowchart-node answer" style="border-color: var(--accent-warning); color: var(--accent-warning);">Go back!<br><small>Check left AND right</small></div>
+                            </div>
+                            <div class="flowchart-branch-item">
+                                <div class="flowchart-branch-label yes">YES</div>
+                                <div class="flowchart-node answer" style="font-size: 0.85rem;">Continue ↓</div>
+                            </div>
+                        </div>
+                        <div class="flowchart-arrow" style="margin-top: 15px;">↓</div>
+                        <div class="flowchart-node question" style="background: rgba(59, 130, 246, 0.15);">
+                            ✓ Did you use the correct formula piece?<br><small>(for piecewise functions)</small>
+                        </div>
+                        <div class="flowchart-arrow">↓</div>
+                        <div class="flowchart-branch">
+                            <div class="flowchart-branch-item">
+                                <div class="flowchart-branch-label no">NO</div>
+                                <div class="flowchart-node answer" style="border-color: var(--accent-warning); color: var(--accent-warning);">Fix it!<br><small>x&lt;a for left, x&gt;a for right</small></div>
+                            </div>
+                            <div class="flowchart-branch-item">
+                                <div class="flowchart-branch-label yes">YES</div>
+                                <div class="flowchart-node answer" style="font-size: 0.85rem;">Continue ↓</div>
+                            </div>
+                        </div>
+                        <div class="flowchart-arrow" style="margin-top: 15px;">↓</div>
+                        <div class="flowchart-node question" style="background: rgba(59, 130, 246, 0.15);">
+                            ✓ Did you confuse lim f(x) with f(a)?
+                        </div>
+                        <div class="flowchart-arrow">↓</div>
+                        <div class="flowchart-node answer" style="font-size: 0.9rem;">
+                            Remember: limit = where it HEADS<br>
+                            NOT the actual value at the point!
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>
@@ -2674,6 +3020,24 @@
 
             Object.keys(animations).forEach(id => updateAnimDisplay(id));
 
+            // Accordion toggle for Problem Types
+            document.querySelectorAll('#problem-type-1 .problem-type-header, #problem-type-2 .problem-type-header, #problem-type-3 .problem-type-header, #problem-type-4 .problem-type-header, #problem-type-5 .problem-type-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const parent = header.parentElement;
+                    const wasCollapsed = parent.classList.contains('collapsed');
+
+                    // Collapse all problem types first (accordion behavior)
+                    document.querySelectorAll('#problem-type-1, #problem-type-2, #problem-type-3, #problem-type-4, #problem-type-5').forEach(pt => {
+                        pt.classList.add('collapsed');
+                    });
+
+                    // If it was collapsed, expand it
+                    if (wasCollapsed) {
+                        parent.classList.remove('collapsed');
+                    }
+                });
+            });
+
             const checkKaTeX = setInterval(() => {
                 if (typeof renderMathInElement !== 'undefined') {
                     renderMathInElement(document.body, { delimiters: [{ left: '\\(', right: '\\)', display: false }, { left: '\\[', right: '\\]', display: true }] });
@@ -2819,6 +3183,158 @@
         ['type1', 'type2', 'type3', 'type5'].forEach(id => {
             if (animations[id]) animations[id].usePrediction = true;
         });
+
+        // ============================================
+        // TRANSLATION FEATURE
+        // ============================================
+        const TRANSLATION_CONFIG = {
+            endpoint: '/api/translate',  // Your backend endpoint
+            maxLength: 2000              // Tencent API limit
+        };
+
+        // Translation API Call
+        async function translateToChinese(text) {
+            if (text.length > TRANSLATION_CONFIG.maxLength) {
+                text = text.substring(0, TRANSLATION_CONFIG.maxLength);
+            }
+
+            const response = await fetch(TRANSLATION_CONFIG.endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text, source: 'auto', target: 'zh' })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Translation failed: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data.translation;
+        }
+
+        // Popup Management
+        let translatePopup = null;
+
+        function clearTranslatePopup() {
+            if (translatePopup) {
+                translatePopup.remove();
+                translatePopup = null;
+            }
+        }
+
+        function createTranslatePopup(selectedText, rect) {
+            clearTranslatePopup();
+
+            const popup = document.createElement('div');
+            popup.className = 'translate-popup';
+            popup.id = 'translate-popup';
+
+            // Calculate position
+            const scrollTop = window.scrollY;
+            const scrollLeft = window.scrollX;
+            const spaceAbove = rect.top;
+            const showBelow = spaceAbove < 70;
+
+            let top = showBelow
+                ? rect.bottom + scrollTop + 12
+                : rect.top + scrollTop - 60;
+            let left = rect.left + scrollLeft + (rect.width / 2);
+
+            // Clamp to viewport
+            const viewportWidth = window.innerWidth;
+            left = Math.max(100, Math.min(left, viewportWidth - 100));
+
+            if (showBelow) popup.classList.add('below');
+
+            popup.style.cssText = `
+                position: absolute;
+                top: ${top}px;
+                left: ${left}px;
+                transform: translateX(-50%);
+            `;
+
+            popup.innerHTML = `
+                <button class="translate-btn" id="do-translate">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 8l6 6M4 14h6v6M15 4h5v5M14.5 4l5 5"/>
+                        <path d="M2 5h12M9 2v6"/>
+                    </svg>
+                    翻译成中文
+                </button>
+            `;
+
+            document.body.appendChild(popup);
+            translatePopup = popup;
+
+            // Handle translate click
+            popup.querySelector('#do-translate').addEventListener('click', async () => {
+                const btn = popup.querySelector('#do-translate');
+                btn.disabled = true;
+                btn.textContent = '翻译中...';
+
+                try {
+                    const translation = await translateToChinese(selectedText);
+                    btn.style.display = 'none';
+
+                    const resultDiv = document.createElement('div');
+                    resultDiv.className = 'translation-result';
+                    resultDiv.textContent = translation;
+                    popup.appendChild(resultDiv);
+
+                    // Adjust position if needed
+                    if (!showBelow) {
+                        const newHeight = popup.offsetHeight;
+                        popup.style.top = `${rect.top + scrollTop - newHeight - 12}px`;
+                    }
+                } catch (error) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'translation-result translation-error';
+                    errorDiv.textContent = '翻译失败，请重试';
+                    popup.appendChild(errorDiv);
+                    btn.style.display = 'none';
+                }
+            });
+        }
+
+        // Text Selection Handling
+        function handleTextSelection() {
+            setTimeout(() => {
+                const selection = window.getSelection();
+                const selectedText = selection.toString().trim();
+
+                if (selectedText.length > 0 && selectedText.length < 5000) {
+                    const range = selection.getRangeAt(0);
+                    const rect = range.getBoundingClientRect();
+                    createTranslatePopup(selectedText, rect);
+                }
+            }, 10);
+        }
+
+        // Initialize Translation (Desktop Only)
+        (function initTranslation() {
+            const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            if (isTouchDevice) return;
+
+            document.addEventListener('mouseup', (e) => {
+                if (e.target.closest('#translate-popup')) return;
+                handleTextSelection();
+            });
+
+            document.addEventListener('mousedown', (e) => {
+                if (!e.target.closest('#translate-popup')) {
+                    clearTranslatePopup();
+                }
+            });
+
+            document.addEventListener('selectstart', clearTranslatePopup);
+            document.addEventListener('scroll', clearTranslatePopup);
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    clearTranslatePopup();
+                    window.getSelection().removeAllRanges();
+                }
+            });
+        })();
     </script>
 
     <!-- Prediction Modal -->
@@ -2840,5 +3356,11 @@
             </div>
         </div>
     </div>
+
+    <!-- Tencent CloudBase JS SDK (official CDN) -->
+    <script src="https://static.cloudbase.net/cloudbase-js-sdk/latest/cloudbase.full.js"></script>
+
+    <!-- Custom Annotation System -->
+    <script src="lib/annotation.js"></script>
 </body>
 </html>
