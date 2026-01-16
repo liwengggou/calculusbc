@@ -143,5 +143,15 @@ jobs:
           cp -r lib dist/
           echo "=== Dist directory contents ==="
           ls -la dist/
-          tcb hosting deploy ./dist / -e ${{ secrets.TCB_ENV_ID }}
-          echo "=== Static files deployed ==="
+          # Retry up to 3 times due to transient network issues
+          for i in 1 2 3; do
+            echo "=== Attempt $i to deploy static files ==="
+            if tcb hosting deploy ./dist / -e ${{ secrets.TCB_ENV_ID }}; then
+              echo "=== Static files deployed successfully ==="
+              exit 0
+            fi
+            echo "=== Attempt $i failed, waiting 10 seconds before retry ==="
+            sleep 10
+          done
+          echo "=== All attempts failed ==="
+          exit 1
