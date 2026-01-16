@@ -70,6 +70,8 @@ exports.main = async (event, context) => {
       const data = typeof body === 'string' ? JSON.parse(body) : body;
       const { quote, comment, uri } = data;
 
+      console.log('POST annotation:', { quote: quote?.substring(0, 50), comment: comment?.substring(0, 50), uri });
+
       if (!quote || !comment || !uri) {
         return {
           statusCode: 400,
@@ -82,6 +84,8 @@ exports.main = async (event, context) => {
         'INSERT INTO annotations (quote, comment, uri, createdAt) VALUES (?, ?, ?, NOW())',
         [quote, comment, uri]
       );
+
+      console.log('Insert result:', { insertId: result.insertId, affectedRows: result.affectedRows });
 
       return {
         statusCode: 200,
@@ -120,11 +124,15 @@ exports.main = async (event, context) => {
     };
 
   } catch (error) {
-    console.error('Database error:', error);
+    console.error('Database error:', error.message);
+    console.error('Full error:', JSON.stringify(error, Object.getOwnPropertyNames(error)));
     return {
       statusCode: 500,
       headers: corsHeaders,
-      body: JSON.stringify({ error: error.message })
+      body: JSON.stringify({
+        error: error.message,
+        code: error.code || 'UNKNOWN'
+      })
     };
   }
 };

@@ -12,6 +12,21 @@ exports.main = async (event, context) => {
   try {
     const connection = await mysql.createConnection(dbConfig);
 
+    const results = [];
+
+    // Create table if it doesn't exist
+    await connection.execute(`
+      CREATE TABLE IF NOT EXISTS annotations (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        quote TEXT,
+        comment TEXT,
+        uri VARCHAR(500),
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_uri (uri)
+      )
+    `);
+    results.push('Ensured table exists');
+
     // Check current table structure
     const [columns] = await connection.execute(
       "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'annotations'",
@@ -20,8 +35,6 @@ exports.main = async (event, context) => {
 
     const existingColumns = columns.map(c => c.COLUMN_NAME);
     console.log('Existing columns:', existingColumns);
-
-    const results = [];
 
     // Add missing columns
     if (!existingColumns.includes('quote')) {
