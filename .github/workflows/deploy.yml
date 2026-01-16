@@ -20,9 +20,22 @@ jobs:
       - name: Install CloudBase CLI
         run: npm install -g @cloudbase/cli
 
+      - name: Install function dependencies
+        run: |
+          cd functions/annotations && npm install
+          cd ../translate && npm install
+          cd ../setup-db && npm install
+
       - name: Login and Deploy to CloudBase
         run: |
           tcb login --apiKeyId ${{ secrets.TENCENT_SECRET_ID }} --apiKey ${{ secrets.TENCENT_SECRET_KEY }}
+
+          # Deploy cloud functions
+          tcb fn deploy annotations -e ${{ secrets.TCB_ENV_ID }}
+          tcb fn deploy translate -e ${{ secrets.TCB_ENV_ID }}
+          tcb fn deploy setup-db -e ${{ secrets.TCB_ENV_ID }}
+
+          # Deploy static files
           mkdir -p dist
           cp *.html dist/
           cp -r lib dist/

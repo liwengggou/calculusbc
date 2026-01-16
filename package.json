@@ -1,0 +1,13 @@
+{
+  "name": "calculusbc",
+  "version": "1.0.0",
+  "description": "AP Calculus BC Learning Platform",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "tencentcloud-sdk-nodejs": "^4.1.168"
+  }
+}
