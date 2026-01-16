@@ -129,6 +129,12 @@ jobs:
           echo "=== Deploying setup-db function ==="
           tcb fn deploy setup-db --force || echo "Setup-db deploy failed!"
 
+      - name: Run setup-db to update MySQL schema
+        run: |
+          echo "=== Running setup-db function to add missing columns ==="
+          tcb fn invoke setup-db -e ${{ secrets.TCB_ENV_ID }}
+          echo "=== Setup-db function executed ==="
+
       - name: Deploy static files
         run: |
           echo "=== Deploying static files ==="
