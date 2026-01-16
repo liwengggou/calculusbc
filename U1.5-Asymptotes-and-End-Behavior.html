@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U1.5 Asymptotes and End Behavior | AP Calculus BC</title>
+
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Custom Annotation System -->
+    <link rel="stylesheet" href="lib/annotation.css">
+
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-tertiary: #e9ecef;
+            --text-primary: #212529;
+            --text-secondary: #495057;
+            --text-muted: #6c757d;
+            --accent-primary: #4361ee;
+            --accent-secondary: #3f37c9;
+            --accent-success: #10b981;
+            --accent-warning: #f59e0b;
+            --accent-danger: #ef4444;
+            --border-color: #dee2e6;
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --bg-tertiary: #0f3460;
+            --text-primary: #eef0f2;
+            --text-secondary: #c9ccd1;
+            --text-muted: #8b8f94;
+            --border-color: #2d3748;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+        .header {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            padding: 40px 20px;
+            margin-bottom: 30px;
+            border-radius: var(--radius-lg);
+        }
+
+        .header-content { max-width: 1200px; margin: 0 auto; }
+
+        .unit-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+
+        .header h1 { font-size: 2.5rem; margin-bottom: 10px; }
+
+        .header-meta { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 15px; }
+
+        .meta-item { display: flex; align-items: center; gap: 5px; font-size: 0.9rem; opacity: 0.9; }
+
+        .freq-badge {
+            background: rgba(255,255,255,0.3);
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-weight: 700;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover { transform: scale(1.1); }
+
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            background: var(--bg-secondary);
+            padding: 10px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 30px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-tab {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .nav-tab:hover { background: var(--bg-tertiary); }
+        .nav-tab.active { background: var(--accent-primary); color: white; }
+
+        .section { display: none; animation: fadeIn 0.3s ease; }
+        .section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 30px;
+            background: var(--accent-primary);
+            border-radius: 2px;
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .card-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 15px; }
+
+        .key-point {
+            display: flex;
+            gap: 15px;
+            padding: 15px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-md);
+            margin-bottom: 10px;
+            border-left: 4px solid var(--accent-primary);
+        }
+
+        .key-point-number {
+            background: var(--accent-primary);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .prereq-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .prereq-header {
+            padding: 15px 20px;
+            background: var(--bg-tertiary);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .prereq-header:hover { background: var(--border-color); }
+
+        .prereq-title { font-weight: 600; display: flex; align-items: center; gap: 10px; }
+
+        .prereq-badge { font-size: 0.75rem; padding: 2px 8px; border-radius: 10px; background: var(--accent-warning); color: white; }
+        .prereq-badge.internal { background: var(--accent-primary); }
+
+        .prereq-content { padding: 20px; display: none; }
+        .prereq-content.active { display: block; }
+
+        .prereq-toggle { font-size: 1.2rem; transition: transform 0.3s; }
+        .prereq-card.open .prereq-toggle { transform: rotate(180deg); }
+
+        .problem-type {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .problem-type-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            cursor: pointer;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .problem-type-header:hover { background: var(--bg-tertiary); }
+
+        .problem-type-title { font-weight: 600; font-size: 1.1rem; }
+
+        .toggle-icon { font-size: 0.9rem; transition: transform 0.3s ease; margin-left: auto; padding-left: 15px; }
+        .problem-type.collapsed .toggle-icon { transform: rotate(-90deg); }
+
+        .problem-type-content {
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+            max-height: 5000px;
+            opacity: 1;
+            padding: 0 20px 20px;
+        }
+
+        .problem-type.collapsed .problem-type-content { max-height: 0; opacity: 0; padding: 0 20px; }
+
+        .difficulty-badge { font-size: 0.75rem; padding: 2px 10px; border-radius: 10px; font-weight: 500; }
+        .difficulty-badge.easy { background: #d1fae5; color: #065f46; }
+        .difficulty-badge.medium { background: #fef3c7; color: #92400e; }
+        .difficulty-badge.hard { background: #fee2e2; color: #991b1b; }
+
+        [data-theme="dark"] .difficulty-badge.easy { background: #065f46; color: #d1fae5; }
+        [data-theme="dark"] .difficulty-badge.medium { background: #92400e; color: #fef3c7; }
+        [data-theme="dark"] .difficulty-badge.hard { background: #991b1b; color: #fee2e2; }
+
+        .pattern-box {
+            background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-secondary));
+            border: 2px dashed var(--accent-primary);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .pattern-label { font-size: 0.8rem; text-transform: uppercase; color: var(--accent-primary); font-weight: 600; margin-bottom: 8px; }
+
+        .exam-tip {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border-left: 4px solid var(--accent-warning);
+            padding: 15px 20px;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            margin: 15px 0;
+        }
+
+        [data-theme="dark"] .exam-tip { background: linear-gradient(135deg, #78350f, #92400e); }
+
+        .exam-tip-label { font-weight: 600; color: var(--accent-warning); font-size: 0.85rem; margin-bottom: 5px; }
+
+        .worked-example { background: var(--bg-tertiary); border-radius: var(--radius-lg); padding: 20px; margin: 20px 0; }
+
+        .example-title { font-weight: 600; font-size: 1.1rem; margin-bottom: 15px; color: var(--accent-primary); }
+
+        .example-problem {
+            background: var(--bg-primary);
+            padding: 15px;
+            border-radius: var(--radius-md);
+            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+        }
+
+        .animation-container {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .animation-step {
+            padding: 15px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            margin-bottom: 10px;
+            border-left: 4px solid var(--accent-primary);
+            display: none;
+        }
+
+        .animation-step.active { display: block; animation: slideIn 0.3s ease; }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .step-number { font-weight: 700; color: var(--accent-primary); margin-bottom: 5px; }
+
+        .step-reasoning { font-size: 0.9rem; color: var(--text-muted); margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border-color); }
+
+        .animation-controls { display: flex; align-items: center; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+
+        .control-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .control-btn:hover { background: var(--accent-primary); color: white; border-color: var(--accent-primary); }
+
+        .progress-bar { flex: 1; height: 6px; background: var(--bg-tertiary); border-radius: 3px; overflow: hidden; min-width: 100px; }
+        .progress-fill { height: 100%; background: var(--accent-primary); transition: width 0.3s ease; }
+
+        .step-counter { font-size: 0.85rem; color: var(--text-muted); min-width: 80px; text-align: center; }
+
+        .practice-problem {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .practice-label { font-size: 0.8rem; text-transform: uppercase; color: var(--accent-success); font-weight: 600; margin-bottom: 10px; }
+        .practice-question { font-size: 1.1rem; margin-bottom: 15px; }
+        .practice-options { display: grid; gap: 10px; }
+
+        .practice-option {
+            padding: 12px 15px;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .practice-option:hover { border-color: var(--accent-primary); }
+        .practice-option.selected { border-color: var(--accent-primary); background: rgba(67, 97, 238, 0.1); }
+        .practice-option.correct { border-color: var(--accent-success); background: rgba(16, 185, 129, 0.1); }
+        .practice-option.incorrect { border-color: var(--accent-danger); background: rgba(239, 68, 68, 0.1); }
+
+        .practice-feedback { margin-top: 15px; padding: 15px; border-radius: var(--radius-md); display: none; }
+        .practice-feedback.show { display: block; }
+        .practice-feedback.correct { background: rgba(16, 185, 129, 0.1); border: 1px solid var(--accent-success); }
+        .practice-feedback.incorrect { background: rgba(239, 68, 68, 0.1); border: 1px solid var(--accent-danger); }
+
+        .decision-flowchart {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .flowchart-title { font-weight: 600; font-size: 1.1rem; margin-bottom: 20px; color: var(--accent-primary); text-align: center; }
+
+        .flowchart-container { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+
+        .flowchart-node { padding: 12px 20px; border-radius: var(--radius-md); text-align: center; max-width: 300px; }
+        .flowchart-node.question { background: var(--accent-primary); color: white; font-weight: 500; }
+        .flowchart-node.answer { background: var(--bg-tertiary); border: 2px solid var(--border-color); }
+        .flowchart-node.success { background: rgba(16, 185, 129, 0.1); border: 2px solid var(--accent-success); color: var(--accent-success); }
+        .flowchart-node.warning { background: rgba(245, 158, 11, 0.1); border: 2px solid var(--accent-warning); color: var(--accent-warning); }
+        .flowchart-node.danger { background: rgba(239, 68, 68, 0.1); border: 2px solid var(--accent-danger); color: var(--accent-danger); }
+
+        .flowchart-arrow { font-size: 1.5rem; color: var(--text-muted); }
+
+        .flowchart-branch { display: flex; gap: 40px; justify-content: center; flex-wrap: wrap; }
+        .flowchart-branch-item { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+
+        .flowchart-branch-label { padding: 4px 12px; border-radius: 12px; font-size: 0.85rem; font-weight: 600; }
+        .flowchart-branch-label.yes { background: var(--accent-success); color: white; }
+        .flowchart-branch-label.no { background: var(--accent-danger); color: white; }
+
+        .mistake-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .mistake-wrong { background: rgba(239, 68, 68, 0.1); padding: 12px 15px; border-radius: var(--radius-md); margin-bottom: 10px; text-decoration: line-through; color: var(--accent-danger); }
+        .mistake-correct { background: rgba(16, 185, 129, 0.1); padding: 12px 15px; border-radius: var(--radius-md); margin-bottom: 10px; border-left: 4px solid var(--accent-success); }
+        .mistake-reason { font-size: 0.9rem; color: var(--text-muted); padding-top: 10px; }
+
+        .connection-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+
+        .connection-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .connection-content h4 { font-size: 1rem; margin-bottom: 5px; }
+        .connection-content p { font-size: 0.9rem; color: var(--text-muted); }
+
+        .graph-container {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .checklist { background: var(--bg-secondary); border-radius: var(--radius-lg); padding: 20px; }
+        .checklist-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border-color); }
+        .checklist-item:last-child { border-bottom: none; }
+        .checklist-checkbox { width: 20px; height: 20px; cursor: pointer; }
+
+        /* Degree comparison table */
+        .degree-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        .degree-table th, .degree-table td {
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .degree-table th {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .degree-table tr:nth-child(even) { background: var(--bg-tertiary); }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8rem; }
+            .nav-tabs { justify-content: center; }
+            .nav-tab { padding: 8px 12px; font-size: 0.85rem; }
+            .flowchart-branch { flex-direction: column; gap: 20px; }
+        }
+
+        /* ========== TRANSLATION POPUP ========== */
+        .translate-popup {
+            position: absolute;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            padding: 8px;
+            z-index: 10000;
+            animation: translateFadeIn 0.2s ease;
+            max-width: 350px;
+        }
+
+        @keyframes translateFadeIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(-5px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        .translate-btn {
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .translate-btn:hover { background: #2563eb; transform: scale(1.02); }
+        .translate-btn:disabled { background: var(--text-muted); cursor: not-allowed; transform: none; }
+
+        .translation-result {
+            margin-top: 8px;
+            padding: 10px 12px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-primary);
+            word-wrap: break-word;
+        }
+
+        .translation-error {
+            color: var(--accent-danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .translate-popup::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: var(--bg-primary);
+        }
+
+        .translate-popup.below::after {
+            top: -8px;
+            bottom: auto;
+            border-top-color: transparent;
+            border-bottom-color: var(--bg-primary);
+        }
+
+        /* ========== INLINE PRACTICE ========== */
+        .inline-practice {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(16, 185, 129, 0.1));
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .inline-practice-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent-success);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .inline-practice-title::before {
+            content: '✏️';
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">🌙</button>
+
+    <header class="header">
+        <div class="header-content">
+            <span class="unit-badge">Unit 1: Limits and Continuity</span>
+            <h1>U1.5 Asymptotes and End Behavior</h1>
+            <p>Master vertical asymptotes, horizontal asymptotes, and limits at infinity</p>
+            <div class="header-meta">
+                <span class="meta-item">📚 CB Topics: 1.14, 1.15</span>
+                <span class="meta-item"><span class="freq-badge">🔥 High Priority</span></span>
+                <span class="meta-item">⏱️ ~45 min</span>
+                <span class="meta-item">📊 MCQ: 29 questions</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-section="keypoints">Key Points</button>
+            <button class="nav-tab" data-section="prerequisites">Prerequisites</button>
+            <button class="nav-tab" data-section="concepts">Concepts</button>
+            <button class="nav-tab" data-section="problemtypes">Problem Types</button>
+            <button class="nav-tab" data-section="examtips">Exam Tips</button>
+            <button class="nav-tab" data-section="mistakes">Common Mistakes</button>
+            <button class="nav-tab" data-section="connections">Connections</button>
+        </nav>
+
+        <!-- Key Points Section -->
+        <section id="keypoints" class="section active">
+            <h2 class="section-title">Key Points</h2>
+
+            <div class="key-point">
+                <span class="key-point-number">1</span>
+                <div>
+                    <strong>Vertical asymptote at \(x = a\)</strong> when \(\lim_{x \to a} f(x) = \pm\infty\). Look for where the denominator equals zero (and numerator doesn't).
+                </div>
+            </div>
+
+            <div class="key-point">
+                <span class="key-point-number">2</span>
+                <div>
+                    <strong>Horizontal asymptote \(y = L\)</strong> when \(\lim_{x \to \pm\infty} f(x) = L\). This describes the end behavior of the function.
+                </div>
+            </div>
+
+            <div class="key-point">
+                <span class="key-point-number">3</span>
+                <div>
+                    <strong>Degree comparison for rational functions:</strong><br>
+                    • deg(num) < deg(den): HA at \(y = 0\)<br>
+                    • deg(num) = deg(den): HA at \(y = \frac{\text{leading coef of num}}{\text{leading coef of den}}\)<br>
+                    • deg(num) > deg(den): No HA (end behavior grows without bound)
+                </div>
+            </div>
+
+            <div class="key-point">
+                <span class="key-point-number">4</span>
+                <div>
+                    <strong>Factor first!</strong> Common factors in numerator and denominator cancel, creating holes instead of vertical asymptotes.
+                </div>
+            </div>
+
+            <div class="key-point">
+                <span class="key-point-number">5</span>
+                <div>
+                    <strong>End behavior dominance:</strong> As \(x \to \pm\infty\), only the highest-degree terms matter. Lower-degree terms become negligible.
+                </div>
+            </div>
+        </section>
+
+        <!-- Prerequisites Section -->
+        <section id="prerequisites" class="section">
+            <h2 class="section-title">Prerequisites</h2>
+
+            <div class="prereq-card">
+                <div class="prereq-header" onclick="togglePrereq(this)">
+                    <span class="prereq-title">
+                        <span class="prereq-badge internal">Internal</span>
+                        U1.2 Calculating Limits
+                    </span>
+                    <span class="prereq-toggle">▼</span>
+                </div>
+                <div class="prereq-content">
+                    <p>You need to be comfortable with:</p>
+                    <ul style="margin: 10px 0 10px 20px;">
+                        <li>Factoring polynomials</li>
+                        <li>Evaluating limits algebraically</li>
+                        <li>Recognizing 0/0 and k/0 forms</li>
+                    </ul>
+                    <p><a href="U1.2-Calculating-Limit.html" style="color: var(--accent-primary);">→ Review U1.2 Calculating Limits</a></p>
+                </div>
+            </div>
+
+            <div class="prereq-card">
+                <div class="prereq-header" onclick="togglePrereq(this)">
+                    <span class="prereq-title">
+                        <span class="prereq-badge">PreCalc</span>
+                        Polynomial Degrees
+                    </span>
+                    <span class="prereq-toggle">▼</span>
+                </div>
+                <div class="prereq-content">
+                    <p><strong>Why it matters:</strong> Comparing degrees is the key to finding horizontal asymptotes.</p>
+
+                    <div class="pattern-box">
+                        <div class="pattern-label">Degree of a Polynomial</div>
+                        <p>The degree is the highest power of x with a non-zero coefficient.</p>
+                        <ul style="margin-top: 10px;">
+                            <li>\(3x^4 + 2x^2 - 1\) has degree 4</li>
+                            <li>\(5x^2 + x\) has degree 2</li>
+                            <li>\(7\) has degree 0</li>
+                        </ul>
+                    </div>
+
+                    <div class="practice-problem">
+                        <div class="practice-label">Quick Check</div>
+                        <div class="practice-question">What is the degree of \(2x^5 - 3x^7 + x^2\)?</div>
+                        <div class="practice-options">
+                            <div class="practice-option">5</div>
+                            <div class="practice-option" data-correct="true">7</div>
+                            <div class="practice-option">2</div>
+                            <div class="practice-option">14</div>
+                        </div>
+                        <div class="practice-feedback"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Concepts Section -->
+        <section id="concepts" class="section">
+            <h2 class="section-title">Core Concepts</h2>
+
+            <div class="card">
+                <h3 class="card-title">Vertical Asymptotes</h3>
+                <p>A vertical asymptote occurs at \(x = a\) when the function approaches infinity:</p>
+                <p style="text-align: center; font-size: 1.2rem; margin: 15px 0;">
+                    \(\displaystyle\lim_{x \to a} f(x) = \pm\infty\)
+                </p>
+
+                <div class="pattern-box">
+                    <div class="pattern-label">Finding Vertical Asymptotes</div>
+                    <ol style="margin-top: 10px;">
+                        <li>Factor numerator and denominator completely</li>
+                        <li>Cancel any common factors (these are holes, not VAs)</li>
+                        <li>Set remaining denominator = 0</li>
+                        <li>Solutions are vertical asymptotes</li>
+                    </ol>
+                </div>
+
+                <div class="graph-container" id="va-graph"></div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title">Horizontal Asymptotes (Degree Comparison)</h3>
+                <p>For rational functions \(\frac{p(x)}{q(x)}\), compare the degrees:</p>
+
+                <table class="degree-table">
+                    <tr>
+                        <th>Comparison</th>
+                        <th>Horizontal Asymptote</th>
+                        <th>Example</th>
+                    </tr>
+                    <tr>
+                        <td>deg(p) < deg(q)</td>
+                        <td>\(y = 0\)</td>
+                        <td>\(\frac{x}{x^2+1} \to y=0\)</td>
+                    </tr>
+                    <tr>
+                        <td>deg(p) = deg(q)</td>
+                        <td>\(y = \frac{a_n}{b_n}\)</td>
+                        <td>\(\frac{2x^2}{3x^2+1} \to y=\frac{2}{3}\)</td>
+                    </tr>
+                    <tr>
+                        <td>deg(p) > deg(q)</td>
+                        <td>No HA</td>
+                        <td>\(\frac{x^3}{x^2+1} \to \pm\infty\)</td>
+                    </tr>
+                </table>
+
+                <div class="graph-container" id="ha-graph"></div>
+            </div>
+
+            <div class="decision-flowchart">
+                <div class="flowchart-title">Decision Flowchart: Finding Horizontal Asymptotes</div>
+                <div class="flowchart-container">
+                    <div class="flowchart-node question">Compare deg(numerator) to deg(denominator)</div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-branch">
+                        <div class="flowchart-branch-item">
+                            <div class="flowchart-branch-label yes">num < den</div>
+                            <div class="flowchart-node success">HA: y = 0</div>
+                        </div>
+                        <div class="flowchart-branch-item">
+                            <div class="flowchart-branch-label yes">num = den</div>
+                            <div class="flowchart-node success">HA: y = leading coefs</div>
+                        </div>
+                        <div class="flowchart-branch-item">
+                            <div class="flowchart-branch-label no">num > den</div>
+                            <div class="flowchart-node danger">No HA</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title">Limits at Infinity with Radicals</h3>
+                <p>For expressions like \(\frac{\sqrt{ax^2 + bx}}{cx}\), factor out \(x^2\) from under the radical:</p>
+
+                <div class="pattern-box">
+                    <div class="pattern-label">Key Technique</div>
+                    <p>\(\sqrt{x^2} = |x| = \begin{cases} x & \text{if } x > 0 \\ -x & \text{if } x < 0 \end{cases}\)</p>
+                    <p style="margin-top: 10px;"><strong>Important:</strong> When \(x \to -\infty\), \(\sqrt{x^2} = -x\) (not \(x\))!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Problem Types Section -->
+        <section id="problemtypes" class="section">
+            <h2 class="section-title">Problem Types</h2>
+
+            <!-- Type 1: Find Vertical Asymptotes -->
+            <div class="problem-type collapsed" id="problem-type-1">
+                <div class="problem-type-header">
+                    <span class="problem-type-title">Type 1: Find Vertical Asymptotes</span>
+                    <span class="difficulty-badge easy">Basic</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="problem-type-content">
+                    <div class="pattern-box">
+                        <div class="pattern-label">Recognition Pattern</div>
+                        <p>"Find all vertical asymptotes" or "At what x-values does f have VAs?"</p>
+                    </div>
+
+                    <div class="exam-tip">
+                        <div class="exam-tip-label">💡 EXAM TIP</div>
+                        Always factor first! Common factors create holes, not asymptotes.
+                    </div>
+
+                    <div class="worked-example">
+                        <div class="example-title">Worked Example</div>
+                        <div class="example-problem">
+                            Find all vertical asymptotes of \(f(x) = \frac{x^2 - 4}{x^2 - x - 2}\)
+                        </div>
+
+                        <div class="animation-container" id="anim-va">
+                            <div class="animation-step" data-step="1">
+                                <div class="step-number">Step 1: Factor numerator and denominator</div>
+                                <p>Numerator: \(x^2 - 4 = (x-2)(x+2)\)</p>
+                                <p>Denominator: \(x^2 - x - 2 = (x-2)(x+1)\)</p>
+                                <div class="step-reasoning">💭 Always factor completely before finding asymptotes.</div>
+                            </div>
+                            <div class="animation-step" data-step="2">
+                                <div class="step-number">Step 2: Cancel common factors</div>
+                                <p>\(f(x) = \frac{(x-2)(x+2)}{(x-2)(x+1)} = \frac{x+2}{x+1}\) for \(x \neq 2\)</p>
+                                <div class="step-reasoning">💭 The factor (x-2) cancels! This creates a hole at x=2, not an asymptote.</div>
+                            </div>
+                            <div class="animation-step" data-step="3">
+                                <div class="step-number">Step 3: Find where simplified denominator = 0</div>
+                                <p>\(x + 1 = 0 \Rightarrow x = -1\)</p>
+                                <div class="step-reasoning">💭 Only the remaining denominator factor creates a vertical asymptote.</div>
+                            </div>
+                            <div class="animation-step" data-step="4">
+                                <div class="step-number">Step 4: Conclusion</div>
+                                <p>Vertical asymptote: \(x = -1\)</p>
+                                <p style="margin-top: 10px;">(Note: There's a hole at \(x = 2\), not an asymptote!)</p>
+                                <div class="step-reasoning">💭 If a factor cancels, it's a hole. If it remains, it's an asymptote.</div>
+                            </div>
+                            <div class="animation-controls">
+                                <button class="control-btn" onclick="animPrev('anim-va')">← Prev</button>
+                                <button class="control-btn" onclick="animNext('anim-va')">Next →</button>
+                                <div class="progress-bar"><div class="progress-fill" style="width: 25%"></div></div>
+                                <span class="step-counter">Step 1 of 4</span>
+                                <button class="control-btn" onclick="animReset('anim-va')">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="practice-problem">
+                        <div class="practice-label">Practice Problem</div>
+                        <div class="practice-question">Find all vertical asymptotes of \(g(x) = \frac{x+3}{x^2-9}\)</div>
+                        <div class="practice-options">
+                            <div class="practice-option">x = 3 and x = -3</div>
+                            <div class="practice-option" data-correct="true">x = 3 only</div>
+                            <div class="practice-option">x = -3 only</div>
+                            <div class="practice-option">No vertical asymptotes</div>
+                        </div>
+                        <div class="practice-feedback"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Type 2: Horizontal Asymptotes -->
+            <div class="problem-type collapsed" id="problem-type-2">
+                <div class="problem-type-header">
+                    <span class="problem-type-title">Type 2: Horizontal Asymptotes (Degree Comparison)</span>
+                    <span class="difficulty-badge easy">Basic</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="problem-type-content">
+                    <div class="pattern-box">
+                        <div class="pattern-label">Recognition Pattern</div>
+                        <p>"Find the horizontal asymptote" or "What is \(\lim_{x \to \infty} f(x)\)?"</p>
+                    </div>
+
+                    <div class="worked-example">
+                        <div class="example-title">Worked Example</div>
+                        <div class="example-problem">
+                            Find the horizontal asymptote of \(f(x) = \frac{3x^2 - 5x + 1}{2x^2 + 4}\)
+                        </div>
+
+                        <div class="animation-container" id="anim-ha">
+                            <div class="animation-step" data-step="1">
+                                <div class="step-number">Step 1: Identify the degrees</div>
+                                <p>Numerator degree: 2 (from \(3x^2\))</p>
+                                <p>Denominator degree: 2 (from \(2x^2\))</p>
+                                <div class="step-reasoning">💭 Compare the highest powers of x.</div>
+                            </div>
+                            <div class="animation-step" data-step="2">
+                                <div class="step-number">Step 2: Apply the rule</div>
+                                <p>Since degrees are EQUAL, HA = ratio of leading coefficients</p>
+                                <div class="step-reasoning">💭 When deg(num) = deg(den), use leading coefficients.</div>
+                            </div>
+                            <div class="animation-step" data-step="3">
+                                <div class="step-number">Step 3: Calculate</div>
+                                <p>Leading coefficient of numerator: 3</p>
+                                <p>Leading coefficient of denominator: 2</p>
+                                <p style="font-size: 1.2rem; text-align: center; margin-top: 15px;">HA: \(y = \frac{3}{2}\)</p>
+                                <div class="step-reasoning">💭 The horizontal asymptote is y = 3/2.</div>
+                            </div>
+                            <div class="animation-controls">
+                                <button class="control-btn" onclick="animPrev('anim-ha')">← Prev</button>
+                                <button class="control-btn" onclick="animNext('anim-ha')">Next →</button>
+                                <div class="progress-bar"><div class="progress-fill" style="width: 33%"></div></div>
+                                <span class="step-counter">Step 1 of 3</span>
+                                <button class="control-btn" onclick="animReset('anim-ha')">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="practice-problem">
+                        <div class="practice-label">Practice Problem</div>
+                        <div class="practice-question">Find the horizontal asymptote of \(h(x) = \frac{5x^3 + 2}{x^4 - 1}\)</div>
+                        <div class="practice-options">
+                            <div class="practice-option" data-correct="true">y = 0</div>
+                            <div class="practice-option">y = 5</div>
+                            <div class="practice-option">y = 5/1 = 5</div>
+                            <div class="practice-option">No horizontal asymptote</div>
+                        </div>
+                        <div class="practice-feedback"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Type 3: Limits at Infinity -->
+            <div class="problem-type collapsed" id="problem-type-3">
+                <div class="problem-type-header">
+                    <span class="problem-type-title">Type 3: Evaluating Limits at Infinity</span>
+                    <span class="difficulty-badge medium">Intermediate</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="problem-type-content">
+                    <div class="pattern-box">
+                        <div class="pattern-label">Strategy: Divide by Highest Power</div>
+                        <p>Divide numerator and denominator by the highest power of x in the denominator.</p>
+                        <p style="margin-top: 10px;">As \(x \to \infty\), terms like \(\frac{1}{x}, \frac{1}{x^2}, ...\) approach 0.</p>
+                    </div>
+
+                    <div class="worked-example">
+                        <div class="example-title">Worked Example</div>
+                        <div class="example-problem">
+                            Evaluate: \(\displaystyle\lim_{x \to \infty} \frac{2x^2 + 3x - 1}{5x^2 - 2x + 4}\)
+                        </div>
+
+                        <div class="animation-container" id="anim-limit-inf">
+                            <div class="animation-step" data-step="1">
+                                <div class="step-number">Step 1: Identify highest power</div>
+                                <p>Highest power in denominator: \(x^2\)</p>
+                                <div class="step-reasoning">💭 We'll divide every term by \(x^2\).</div>
+                            </div>
+                            <div class="animation-step" data-step="2">
+                                <div class="step-number">Step 2: Divide each term</div>
+                                <p>\(\displaystyle\lim_{x \to \infty} \frac{\frac{2x^2}{x^2} + \frac{3x}{x^2} - \frac{1}{x^2}}{\frac{5x^2}{x^2} - \frac{2x}{x^2} + \frac{4}{x^2}} = \lim_{x \to \infty} \frac{2 + \frac{3}{x} - \frac{1}{x^2}}{5 - \frac{2}{x} + \frac{4}{x^2}}\)</p>
+                                <div class="step-reasoning">💭 Simplify each fraction.</div>
+                            </div>
+                            <div class="animation-step" data-step="3">
+                                <div class="step-number">Step 3: Evaluate as x → ∞</div>
+                                <p>As \(x \to \infty\): \(\frac{3}{x} \to 0\), \(\frac{1}{x^2} \to 0\), \(\frac{2}{x} \to 0\), \(\frac{4}{x^2} \to 0\)</p>
+                                <p style="font-size: 1.2rem; text-align: center; margin-top: 10px;">\(= \frac{2 + 0 - 0}{5 - 0 + 0} = \frac{2}{5}\)</p>
+                                <div class="step-reasoning">💭 Only the constant terms survive!</div>
+                            </div>
+                            <div class="animation-controls">
+                                <button class="control-btn" onclick="animPrev('anim-limit-inf')">← Prev</button>
+                                <button class="control-btn" onclick="animNext('anim-limit-inf')">Next →</button>
+                                <div class="progress-bar"><div class="progress-fill" style="width: 33%"></div></div>
+                                <span class="step-counter">Step 1 of 3</span>
+                                <button class="control-btn" onclick="animReset('anim-limit-inf')">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="inline-practice">
+                        <h4 class="inline-practice-title">Practice This Type</h4>
+                        <div class="practice-problem">
+                            <div class="practice-label">Practice Problem</div>
+                            <div class="practice-question">Evaluate: \(\displaystyle\lim_{x \to \infty} \frac{3x^3 - 2x}{5x^3 + x^2}\)</div>
+                            <div class="practice-options">
+                                <div class="practice-option">0</div>
+                                <div class="practice-option" data-correct="true">\(\frac{3}{5}\)</div>
+                                <div class="practice-option">\(\infty\)</div>
+                                <div class="practice-option">-\(\frac{2}{1}\)</div>
+                            </div>
+                            <div class="practice-feedback"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Type 4: Radicals at Infinity -->
+            <div class="problem-type collapsed" id="problem-type-4">
+                <div class="problem-type-header">
+                    <span class="problem-type-title">Type 4: Limits at Infinity with Radicals</span>
+                    <span class="difficulty-badge hard">Advanced</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="problem-type-content">
+                    <div class="pattern-box">
+                        <div class="pattern-label">Key Warning</div>
+                        <p>\(\sqrt{x^2} = |x|\), which equals \(x\) when \(x > 0\) but equals \(-x\) when \(x < 0\).</p>
+                        <p style="margin-top: 10px;">When finding \(\lim_{x \to -\infty}\), be careful with the sign!</p>
+                    </div>
+
+                    <div class="worked-example">
+                        <div class="example-title">Worked Example</div>
+                        <div class="example-problem">
+                            Evaluate: \(\displaystyle\lim_{x \to \infty} \frac{\sqrt{4x^2 + 3}}{x}\) and \(\displaystyle\lim_{x \to -\infty} \frac{\sqrt{4x^2 + 3}}{x}\)
+                        </div>
+
+                        <div class="animation-container" id="anim-radical">
+                            <div class="animation-step" data-step="1">
+                                <div class="step-number">Part A: As x → +∞</div>
+                                <p>\(\displaystyle\lim_{x \to \infty} \frac{\sqrt{4x^2 + 3}}{x} = \lim_{x \to \infty} \frac{\sqrt{x^2(4 + \frac{3}{x^2})}}{x}\)</p>
+                                <div class="step-reasoning">💭 Factor \(x^2\) out from under the radical.</div>
+                            </div>
+                            <div class="animation-step" data-step="2">
+                                <div class="step-number">Part A continued</div>
+                                <p>For \(x > 0\): \(\sqrt{x^2} = x\)</p>
+                                <p>\(= \displaystyle\lim_{x \to \infty} \frac{x\sqrt{4 + \frac{3}{x^2}}}{x} = \sqrt{4 + 0} = 2\)</p>
+                                <div class="step-reasoning">💭 When x > 0, √(x²) = x, so we can cancel.</div>
+                            </div>
+                            <div class="animation-step" data-step="3">
+                                <div class="step-number">Part B: As x → -∞</div>
+                                <p>For \(x < 0\): \(\sqrt{x^2} = -x\) (positive!)</p>
+                                <p>\(= \displaystyle\lim_{x \to -\infty} \frac{(-x)\sqrt{4 + \frac{3}{x^2}}}{x} = \lim_{x \to -\infty} -\sqrt{4} = -2\)</p>
+                                <div class="step-reasoning">💭 When x < 0, √(x²) = -x (absolute value is positive), so we get a negative sign!</div>
+                            </div>
+                            <div class="animation-controls">
+                                <button class="control-btn" onclick="animPrev('anim-radical')">← Prev</button>
+                                <button class="control-btn" onclick="animNext('anim-radical')">Next →</button>
+                                <div class="progress-bar"><div class="progress-fill" style="width: 33%"></div></div>
+                                <span class="step-counter">Step 1 of 3</span>
+                                <button class="control-btn" onclick="animReset('anim-radical')">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="exam-tip">
+                        <div class="exam-tip-label">💡 EXAM TIP</div>
+                        For radicals going to -∞, the answer often has the opposite sign of the +∞ case. Always check both directions!
+                    </div>
+
+                    <div class="inline-practice">
+                        <h4 class="inline-practice-title">Practice This Type</h4>
+                        <div class="practice-problem">
+                            <div class="practice-label">Practice Problem</div>
+                            <div class="practice-question">Evaluate: \(\displaystyle\lim_{x \to -\infty} \frac{\sqrt{9x^2 + 1}}{x}\)</div>
+                            <div class="practice-options">
+                                <div class="practice-option">3</div>
+                                <div class="practice-option" data-correct="true">-3</div>
+                                <div class="practice-option">0</div>
+                                <div class="practice-option">Does not exist</div>
+                            </div>
+                            <div class="practice-feedback"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Exam Tips Section -->
+        <section id="examtips" class="section">
+            <h2 class="section-title">Exam Tips</h2>
+
+            <div class="decision-flowchart">
+                <div class="flowchart-title">Master Flowchart: Finding All Asymptotes</div>
+                <div class="flowchart-container">
+                    <div class="flowchart-node question">Step 1: Factor completely</div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-node answer">Cancel common factors (these are holes)</div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-node question">Step 2: Vertical Asymptotes</div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-node answer">Set simplified denominator = 0</div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-node question">Step 3: Horizontal Asymptote</div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-node answer">Compare degrees of num and den</div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-node success">Done! List all asymptotes</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title">Quick Reference</h3>
+
+                <div class="exam-tip">
+                    <div class="exam-tip-label">💡 TIP #1: Factor First, Always</div>
+                    Common factors = holes, not asymptotes. This is the most common mistake!
+                </div>
+
+                <div class="exam-tip">
+                    <div class="exam-tip-label">💡 TIP #2: Degree Shortcut</div>
+                    For HAs, just compare the highest powers. Ignore all other terms. Faster than dividing!
+                </div>
+
+                <div class="exam-tip">
+                    <div class="exam-tip-label">💡 TIP #3: No HA ≠ No End Behavior</div>
+                    If deg(num) > deg(den), there's no HA, but the function still has end behavior (→±∞).
+                </div>
+
+                <div class="exam-tip">
+                    <div class="exam-tip-label">💡 TIP #4: √(x²) Trap</div>
+                    Remember: √(x²) = |x|. When x < 0, this equals -x, not x!
+                </div>
+            </div>
+        </section>
+
+        <!-- Common Mistakes Section -->
+        <section id="mistakes" class="section">
+            <h2 class="section-title">Common Mistakes</h2>
+
+            <div class="decision-flowchart">
+                <div class="flowchart-title">Verification Checklist</div>
+                <div class="flowchart-container">
+                    <div class="flowchart-node question">Did you factor first?</div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-node answer">☐ Cancel common factors (holes)</div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-node answer">☐ Only remaining factors give VAs</div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-node answer">☐ For radicals at -∞, check sign</div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-node success">Ready to answer ✓</div>
+                </div>
+            </div>
+
+            <div class="mistake-item">
+                <h4>Mistake #1: Not factoring first</h4>
+                <div class="mistake-wrong">\(\frac{x^2-4}{x^2-x-2}\) has VA at x=2 and x=-1 ✗</div>
+                <div class="mistake-correct">
+                    <strong>Correct:</strong> After factoring: \(\frac{(x-2)(x+2)}{(x-2)(x+1)}\)<br>
+                    The (x-2) cancels → hole at x=2, VA only at x=-1
+                </div>
+            </div>
+
+            <div class="mistake-item">
+                <h4>Mistake #2: Wrong HA rule</h4>
+                <div class="mistake-wrong">\(\frac{3x^2+1}{x^3-2}\) has HA at y = 3/1 = 3 ✗</div>
+                <div class="mistake-correct">
+                    <strong>Correct:</strong> deg(num) = 2 < deg(den) = 3<br>
+                    When num degree is smaller, HA is y = 0
+                </div>
+            </div>
+
+            <div class="mistake-item">
+                <h4>Mistake #3: Forgetting √(x²) = |x| at -∞</h4>
+                <div class="mistake-wrong">\(\lim_{x \to -\infty} \frac{\sqrt{x^2}}{x} = \frac{x}{x} = 1\) ✗</div>
+                <div class="mistake-correct">
+                    <strong>Correct:</strong> When x < 0, √(x²) = -x<br>
+                    \(\frac{-x}{x} = -1\), not 1!
+                </div>
+            </div>
+
+            <div class="mistake-item">
+                <h4>Mistake #4: Confusing VA and HA</h4>
+                <div class="mistake-wrong">"The VA is y = 2" ✗</div>
+                <div class="mistake-correct">
+                    <strong>Correct:</strong> Vertical asymptotes are x = (value).<br>
+                    Horizontal asymptotes are y = (value).
+                </div>
+            </div>
+        </section>
+
+        <!-- Connections Section -->
+        <section id="connections" class="section">
+            <h2 class="section-title">Forward Connections</h2>
+
+            <div class="connection-card">
+                <div class="connection-icon">📈</div>
+                <div class="connection-content">
+                    <h4>U4.5 L'Hôpital's Rule</h4>
+                    <p>For ∞/∞ forms at infinity, L'Hôpital's Rule provides an alternative method to find limits.</p>
+                </div>
+            </div>
+
+            <div class="connection-card">
+                <div class="connection-icon">📊</div>
+                <div class="connection-content">
+                    <h4>U5.3 Function Behaviors</h4>
+                    <p>Asymptotic behavior is key to understanding how functions behave as x grows large.</p>
+                </div>
+            </div>
+
+            <div class="connection-card">
+                <div class="connection-icon">🔢</div>
+                <div class="connection-content">
+                    <h4>U6.6 Improper Integrals (BC)</h4>
+                    <p>Limits at infinity are essential for evaluating improper integrals with infinite bounds.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title">Self-Assessment Checklist</h3>
+                <div class="checklist">
+                    <div class="checklist-item">
+                        <input type="checkbox" class="checklist-checkbox" id="check1">
+                        <label for="check1">I can find vertical asymptotes by factoring</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" class="checklist-checkbox" id="check2">
+                        <label for="check2">I can distinguish holes from asymptotes</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" class="checklist-checkbox" id="check3">
+                        <label for="check3">I can find HAs using degree comparison</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" class="checklist-checkbox" id="check4">
+                        <label for="check4">I can evaluate limits at infinity</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" class="checklist-checkbox" id="check5">
+                        <label for="check5">I can handle radicals at -∞ correctly</label>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Theme Toggle
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            document.querySelector('.theme-toggle').textContent = newTheme === 'dark' ? '☀️' : '🌙';
+            renderGraphs();
+        }
+
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.body.setAttribute('data-theme', savedTheme);
+        document.querySelector('.theme-toggle').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+        // Navigation
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tab.getAttribute('data-section')).classList.add('active');
+            });
+        });
+
+        // Prerequisites Toggle
+        function togglePrereq(header) {
+            const card = header.parentElement;
+            card.classList.toggle('open');
+            card.querySelector('.prereq-content').classList.toggle('active');
+        }
+
+        // Problem Type Accordion
+        document.querySelectorAll('.problem-type .problem-type-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const parent = header.parentElement;
+                const wasCollapsed = parent.classList.contains('collapsed');
+                document.querySelectorAll('.problem-type[id^="problem-type-"]').forEach(pt => pt.classList.add('collapsed'));
+                if (wasCollapsed) parent.classList.remove('collapsed');
+            });
+        });
+
+        // Animation System
+        const animations = {};
+
+        function initAnimation(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            const steps = container.querySelectorAll('.animation-step');
+            animations[containerId] = { currentStep: 1, totalSteps: steps.length };
+            updateAnimation(containerId);
+        }
+
+        function updateAnimation(containerId) {
+            const container = document.getElementById(containerId);
+            const anim = animations[containerId];
+            container.querySelectorAll('.animation-step').forEach((step, i) => {
+                step.classList.toggle('active', i + 1 === anim.currentStep);
+            });
+            container.querySelector('.progress-fill').style.width = `${(anim.currentStep / anim.totalSteps) * 100}%`;
+            container.querySelector('.step-counter').textContent = `Step ${anim.currentStep} of ${anim.totalSteps}`;
+        }
+
+        function animNext(id) { if (animations[id].currentStep < animations[id].totalSteps) { animations[id].currentStep++; updateAnimation(id); } }
+        function animPrev(id) { if (animations[id].currentStep > 1) { animations[id].currentStep--; updateAnimation(id); } }
+        function animReset(id) { animations[id].currentStep = 1; updateAnimation(id); }
+
+        // Practice Problems
+        document.querySelectorAll('.practice-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const problem = this.closest('.practice-problem');
+                problem.querySelectorAll('.practice-option').forEach(opt => opt.classList.remove('selected', 'correct', 'incorrect'));
+                this.classList.add('selected');
+                const feedback = problem.querySelector('.practice-feedback');
+                if (this.getAttribute('data-correct') === 'true') {
+                    this.classList.add('correct');
+                    feedback.textContent = '✓ Correct!';
+                    feedback.className = 'practice-feedback show correct';
+                } else {
+                    this.classList.add('incorrect');
+                    problem.querySelector('[data-correct="true"]').classList.add('correct');
+                    feedback.textContent = '✗ Not quite. See the correct answer.';
+                    feedback.className = 'practice-feedback show incorrect';
+                }
+            });
+        });
+
+        // Render Graphs
+        function renderGraphs() {
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
+            const bgColor = isDark ? '#1a1a2e' : '#ffffff';
+            const textColor = isDark ? '#eef0f2' : '#212529';
+            const gridColor = isDark ? '#2d3748' : '#e9ecef';
+
+            // Vertical asymptote graph
+            const vaDiv = document.getElementById('va-graph');
+            if (vaDiv) {
+                const x1 = [], y1 = [], x2 = [], y2 = [];
+                for (let i = -5; i < 1.9; i += 0.05) { x1.push(i); y1.push(1/(i-2)); }
+                for (let i = 2.1; i <= 6; i += 0.05) { x2.push(i); y2.push(1/(i-2)); }
+
+                Plotly.newPlot('va-graph', [
+                    { x: x1, y: y1, type: 'scatter', mode: 'lines', line: { color: '#4361ee', width: 2 }, name: 'f(x) = 1/(x-2)' },
+                    { x: x2, y: y2, type: 'scatter', mode: 'lines', line: { color: '#4361ee', width: 2 }, showlegend: false },
+                    { x: [2, 2], y: [-10, 10], type: 'scatter', mode: 'lines', line: { color: '#ef4444', width: 2, dash: 'dash' }, name: 'VA: x = 2' }
+                ], {
+                    title: { text: 'Vertical Asymptote Example', font: { color: textColor } },
+                    xaxis: { gridcolor: gridColor, zerolinecolor: textColor, tickfont: { color: textColor }, range: [-4, 6] },
+                    yaxis: { gridcolor: gridColor, zerolinecolor: textColor, tickfont: { color: textColor }, range: [-6, 6] },
+                    paper_bgcolor: bgColor, plot_bgcolor: bgColor, font: { color: textColor }
+                }, { responsive: true });
+            }
+
+            // Horizontal asymptote graph
+            const haDiv = document.getElementById('ha-graph');
+            if (haDiv) {
+                const x = [], y = [];
+                for (let i = -20; i <= 20; i += 0.2) {
+                    x.push(i);
+                    y.push((2*i*i + 1)/(i*i + 1));
+                }
+
+                Plotly.newPlot('ha-graph', [
+                    { x: x, y: y, type: 'scatter', mode: 'lines', line: { color: '#4361ee', width: 2 }, name: 'f(x) = (2x²+1)/(x²+1)' },
+                    { x: [-20, 20], y: [2, 2], type: 'scatter', mode: 'lines', line: { color: '#10b981', width: 2, dash: 'dash' }, name: 'HA: y = 2' }
+                ], {
+                    title: { text: 'Horizontal Asymptote Example', font: { color: textColor } },
+                    xaxis: { gridcolor: gridColor, zerolinecolor: textColor, tickfont: { color: textColor } },
+                    yaxis: { gridcolor: gridColor, zerolinecolor: textColor, tickfont: { color: textColor }, range: [0, 3] },
+                    paper_bgcolor: bgColor, plot_bgcolor: bgColor, font: { color: textColor }
+                }, { responsive: true });
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '\\[', right: '\\]', display: true},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '$', right: '$', display: false}
+                ],
+                throwOnError: false
+            });
+
+            initAnimation('anim-va');
+            initAnimation('anim-ha');
+            initAnimation('anim-limit-inf');
+            initAnimation('anim-radical');
+            renderGraphs();
+        });
+
+        // Practice Problem Handler
+        document.querySelectorAll('.practice-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const problem = this.closest('.practice-problem');
+                const options = problem.querySelectorAll('.practice-option');
+                const feedback = problem.querySelector('.practice-feedback');
+
+                options.forEach(opt => {
+                    opt.classList.remove('selected', 'correct', 'incorrect');
+                });
+
+                this.classList.add('selected');
+
+                const isCorrect = this.getAttribute('data-correct') === 'true';
+
+                if (isCorrect) {
+                    this.classList.add('correct');
+                    feedback.textContent = '✓ Correct! Great work.';
+                    feedback.className = 'practice-feedback show correct';
+                } else {
+                    this.classList.add('incorrect');
+                    const correctOption = problem.querySelector('[data-correct="true"]');
+                    correctOption.classList.add('correct');
+                    feedback.textContent = '✗ Not quite. The correct answer is highlighted.';
+                    feedback.className = 'practice-feedback show incorrect';
+                }
+            });
+        });
+
+        // ============================================
+        // TRANSLATION FEATURE
+        // ============================================
+        const TRANSLATION_CONFIG = {
+            endpoint: '/api/translate',
+            maxLength: 2000
+        };
+
+        async function translateToChinese(text) {
+            if (text.length > TRANSLATION_CONFIG.maxLength) {
+                text = text.substring(0, TRANSLATION_CONFIG.maxLength);
+            }
+
+            const response = await fetch(TRANSLATION_CONFIG.endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text, source: 'auto', target: 'zh' })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Translation failed: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data.translation;
+        }
+
+        let translatePopup = null;
+
+        function clearTranslatePopup() {
+            if (translatePopup) {
+                translatePopup.remove();
+                translatePopup = null;
+            }
+        }
+
+        function createTranslatePopup(selectedText, rect) {
+            clearTranslatePopup();
+
+            const popup = document.createElement('div');
+            popup.className = 'translate-popup';
+            popup.id = 'translate-popup';
+
+            const scrollTop = window.scrollY;
+            const scrollLeft = window.scrollX;
+            const spaceAbove = rect.top;
+            const showBelow = spaceAbove < 70;
+
+            let top = showBelow
+                ? rect.bottom + scrollTop + 12
+                : rect.top + scrollTop - 60;
+            let left = rect.left + scrollLeft + (rect.width / 2);
+
+            const viewportWidth = window.innerWidth;
+            left = Math.max(100, Math.min(left, viewportWidth - 100));
+
+            if (showBelow) popup.classList.add('below');
+
+            popup.style.cssText = `
+                position: absolute;
+                top: ${top}px;
+                left: ${left}px;
+                transform: translateX(-50%);
+            `;
+
+            popup.innerHTML = `
+                <button class="translate-btn" id="do-translate">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 8l6 6M4 14h6v6M15 4h5v5M14.5 4l5 5"/>
+                        <path d="M2 5h12M9 2v6"/>
+                    </svg>
+                    翻译成中文
+                </button>
+            `;
+
+            document.body.appendChild(popup);
+            translatePopup = popup;
+
+            popup.querySelector('#do-translate').addEventListener('click', async () => {
+                const btn = popup.querySelector('#do-translate');
+                btn.disabled = true;
+                btn.textContent = '翻译中...';
+
+                try {
+                    const translation = await translateToChinese(selectedText);
+                    btn.style.display = 'none';
+
+                    const resultDiv = document.createElement('div');
+                    resultDiv.className = 'translation-result';
+                    resultDiv.textContent = translation;
+                    popup.appendChild(resultDiv);
+
+                    if (!showBelow) {
+                        const newHeight = popup.offsetHeight;
+                        popup.style.top = `${rect.top + scrollTop - newHeight - 12}px`;
+                    }
+                } catch (error) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'translation-result translation-error';
+                    errorDiv.textContent = '翻译失败，请重试';
+                    popup.appendChild(errorDiv);
+                    btn.style.display = 'none';
+                }
+            });
+        }
+
+        function handleTextSelection() {
+            setTimeout(() => {
+                const selection = window.getSelection();
+                const selectedText = selection.toString().trim();
+
+                if (selectedText.length > 0 && selectedText.length < 5000) {
+                    const range = selection.getRangeAt(0);
+                    const rect = range.getBoundingClientRect();
+                    createTranslatePopup(selectedText, rect);
+                }
+            }, 10);
+        }
+
+        (function initTranslation() {
+            const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            if (isTouchDevice) return;
+
+            document.addEventListener('mouseup', (e) => {
+                if (e.target.closest('#translate-popup')) return;
+                handleTextSelection();
+            });
+
+            document.addEventListener('mousedown', (e) => {
+                if (!e.target.closest('#translate-popup')) {
+                    clearTranslatePopup();
+                }
+            });
+
+            document.addEventListener('selectstart', clearTranslatePopup);
+            document.addEventListener('scroll', clearTranslatePopup);
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    clearTranslatePopup();
+                    window.getSelection().removeAllRanges();
+                }
+            });
+        })();
+    </script>
+
+    <!-- Tencent CloudBase JS SDK -->
+    <script src="https://static.cloudbase.net/cloudbase-js-sdk/latest/cloudbase.full.js"></script>
+
+    <!-- Custom Annotation System -->
+    <script src="lib/annotation.js"></script>
+</body>
+</html>

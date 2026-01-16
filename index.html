@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AP Calculus BC | Interactive Learning Platform</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --accent-primary: #3b82f6;
+            --accent-secondary: #8b5cf6;
+            --accent-success: #10b981;
+            --accent-warning: #f59e0b;
+            --accent-danger: #ef4444;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --border-color: #475569;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            padding: 60px 20px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 60%;
+            height: 200%;
+            background: rgba(255,255,255,0.1);
+            transform: rotate(15deg);
+        }
+
+        .header-content { position: relative; z-index: 1; }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .header-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: var(--radius-md);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.2s;
+        }
+
+        .theme-toggle:hover { transform: scale(1.1); }
+        .theme-toggle svg { width: 24px; height: 24px; fill: var(--text-primary); }
+
+        /* Unit Cards */
+        .units-grid {
+            display: grid;
+            gap: 30px;
+        }
+
+        .unit-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .unit-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .unit-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .unit-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .unit-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .unit-description {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .subunits-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .subunit-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 20px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .subunit-link:hover {
+            background: var(--bg-primary);
+            border-color: var(--accent-primary);
+            transform: translateX(5px);
+        }
+
+        .subunit-number {
+            background: var(--accent-primary);
+            color: white;
+            padding: 4px 10px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .subunit-title {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .subunit-arrow {
+            color: var(--text-muted);
+            transition: transform 0.2s;
+        }
+
+        .subunit-link:hover .subunit-arrow {
+            transform: translateX(5px);
+            color: var(--accent-primary);
+        }
+
+        /* Badges */
+        .difficulty-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .difficulty-badge.low { background: rgba(16, 185, 129, 0.15); color: var(--accent-success); }
+        .difficulty-badge.medium { background: rgba(245, 158, 11, 0.15); color: var(--accent-warning); }
+        .difficulty-badge.high { background: rgba(239, 68, 68, 0.15); color: var(--accent-danger); }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .header-stats { gap: 15px; }
+            .stat-item { padding: 10px 15px; }
+            .stat-number { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+        <svg class="sun-icon" viewBox="0 0 24 24">
+            <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+        </svg>
+    </button>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>AP Calculus BC</h1>
+                <p>Interactive Learning Platform</p>
+                <div class="header-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">10</span>
+                        <span class="stat-label">Units</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">122</span>
+                        <span class="stat-label">Topics</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">Interactive</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Units Grid -->
+        <div class="units-grid">
+            <!-- Unit 1: Limits and Continuity -->
+            <div class="unit-card">
+                <div class="unit-header">
+                    <div class="unit-number">1</div>
+                    <h2 class="unit-title">Limits and Continuity</h2>
+                </div>
+                <p class="unit-description">Understand the concept of limits, continuity, and their applications. Master techniques for evaluating limits and identifying discontinuities.</p>
+                <div class="subunits-list">
+                    <a href="U1.1-Existence-of-Limit.html" class="subunit-link">
+                        <span class="subunit-number">1.1</span>
+                        <span class="subunit-title">Existence of Limit</span>
+                        <span class="difficulty-badge medium">Medium</span>
+                        <span class="subunit-arrow">→</span>
+                    </a>
+                    <a href="U1.2-Calculating-Limit.html" class="subunit-link">
+                        <span class="subunit-number">1.2</span>
+                        <span class="subunit-title">Calculating Limits</span>
+                        <span class="difficulty-badge medium">Medium</span>
+                        <span class="subunit-arrow">→</span>
+                    </a>
+                    <a href="U1.3-Squeeze-Theorem.html" class="subunit-link">
+                        <span class="subunit-number">1.3</span>
+                        <span class="subunit-title">Squeeze Theorem</span>
+                        <span class="difficulty-badge high">High</span>
+                        <span class="subunit-arrow">→</span>
+                    </a>
+                    <a href="U1.4-Continuity-and-Discontinuities.html" class="subunit-link">
+                        <span class="subunit-number">1.4</span>
+                        <span class="subunit-title">Continuity and Discontinuities</span>
+                        <span class="difficulty-badge medium">Medium</span>
+                        <span class="subunit-arrow">→</span>
+                    </a>
+                    <a href="U1.5-Asymptotes-and-End-Behavior.html" class="subunit-link">
+                        <span class="subunit-number">1.5</span>
+                        <span class="subunit-title">Asymptotes and End Behavior</span>
+                        <span class="difficulty-badge medium">Medium</span>
+                        <span class="subunit-arrow">→</span>
+                    </a>
+                    <a href="U1.6-Intermediate-Value-Theorem.html" class="subunit-link">
+                        <span class="subunit-number">1.6</span>
+                        <span class="subunit-title">Intermediate Value Theorem</span>
+                        <span class="difficulty-badge high">High</span>
+                        <span class="subunit-arrow">→</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Placeholder for future units -->
+            <div class="unit-card" style="opacity: 0.6;">
+                <div class="unit-header">
+                    <div class="unit-number">2</div>
+                    <h2 class="unit-title">Differentiation: Definition and Fundamental Properties</h2>
+                </div>
+                <p class="unit-description">Learn the definition of derivatives, differentiation rules, and fundamental properties. Coming soon.</p>
+                <div class="subunits-list">
+                    <div class="subunit-link" style="cursor: not-allowed;">
+                        <span class="subunit-number">2.1</span>
+                        <span class="subunit-title">Average and Instantaneous Rate of Change</span>
+                        <span class="difficulty-badge low">Low</span>
+                        <span class="subunit-arrow">→</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="unit-card" style="opacity: 0.6;">
+                <div class="unit-header">
+                    <div class="unit-number">3</div>
+                    <h2 class="unit-title">Differentiation: Composite, Implicit, and Inverse Functions</h2>
+                </div>
+                <p class="unit-description">Master the chain rule, implicit differentiation, and derivatives of inverse functions. Coming soon.</p>
+            </div>
+
+            <div class="unit-card" style="opacity: 0.6;">
+                <div class="unit-header">
+                    <div class="unit-number">4</div>
+                    <h2 class="unit-title">Contextual Applications of Differentiation</h2>
+                </div>
+                <p class="unit-description">Apply derivatives to real-world problems including related rates and linear approximation. Coming soon.</p>
+            </div>
+
+            <div class="unit-card" style="opacity: 0.6;">
+                <div class="unit-header">
+                    <div class="unit-number">5</div>
+                    <h2 class="unit-title">Analytical Applications of Differentiation</h2>
+                </div>
+                <p class="unit-description">Analyze functions using derivatives, find extrema, and apply the Mean Value Theorem. Coming soon.</p>
+            </div>
+
+            <div class="unit-card" style="opacity: 0.6;">
+                <div class="unit-header">
+                    <div class="unit-number">6</div>
+                    <h2 class="unit-title">Integration and Accumulation of Change</h2>
+                </div>
+                <p class="unit-description">Understand integrals, the Fundamental Theorem of Calculus, and integration techniques. Coming soon.</p>
+            </div>
+
+            <div class="unit-card" style="opacity: 0.6;">
+                <div class="unit-header">
+                    <div class="unit-number">7</div>
+                    <h2 class="unit-title">Differential Equations</h2>
+                </div>
+                <p class="unit-description">Solve differential equations and apply them to modeling real-world scenarios. Coming soon.</p>
+            </div>
+
+            <div class="unit-card" style="opacity: 0.6;">
+                <div class="unit-header">
+                    <div class="unit-number">8</div>
+                    <h2 class="unit-title">Applications of Integration</h2>
+                </div>
+                <p class="unit-description">Calculate areas, volumes, and arc lengths using integration. Coming soon.</p>
+            </div>
+
+            <div class="unit-card" style="opacity: 0.6;">
+                <div class="unit-header">
+                    <div class="unit-number">9</div>
+                    <h2 class="unit-title">Parametric Equations, Polar Coordinates, and Vectors</h2>
+                </div>
+                <p class="unit-description">Work with parametric equations, polar coordinates, and vector-valued functions. Coming soon.</p>
+            </div>
+
+            <div class="unit-card" style="opacity: 0.6;">
+                <div class="unit-header">
+                    <div class="unit-number">10</div>
+                    <h2 class="unit-title">Infinite Sequences and Series</h2>
+                </div>
+                <p class="unit-description">Study convergence tests, Taylor series, and power series representations. Coming soon.</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>AP Calculus BC Interactive Learning Platform</p>
+        </footer>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        }
+
+        function updateThemeIcon(theme) {
+            const toggle = document.querySelector('.theme-toggle');
+            if (theme === 'dark') {
+                toggle.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>`;
+            } else {
+                toggle.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"/>
+                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                </svg>`;
+            }
+        }
+
+        // Initialize theme from localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+        });
+    </script>
+</body>
+</html>

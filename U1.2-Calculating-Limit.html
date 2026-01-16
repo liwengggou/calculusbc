@@ -1,0 +1,2158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U1.2 Calculating Limits | AP Calculus BC</title>
+
+    <!-- KaTeX for mathematical notation -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Plotly.js for graphs -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+    <!-- Math.js for calculations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.2.1/math.min.js"></script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Custom Annotation System -->
+    <link rel="stylesheet" href="lib/annotation.css">
+
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-tertiary: #e9ecef;
+            --text-primary: #212529;
+            --text-secondary: #495057;
+            --text-muted: #6c757d;
+            --accent-primary: #4361ee;
+            --accent-secondary: #3f37c9;
+            --accent-success: #10b981;
+            --accent-warning: #f59e0b;
+            --accent-danger: #ef4444;
+            --border-color: #dee2e6;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --font-mono: 'SF Mono', 'Consolas', 'Liberation Mono', monospace;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --bg-tertiary: #0f3460;
+            --text-primary: #eef0f2;
+            --text-secondary: #c9ccd1;
+            --text-muted: #8b8f94;
+            --border-color: #2d3748;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.4);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            padding: 40px 20px;
+            margin-bottom: 30px;
+            border-radius: var(--radius-lg);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .unit-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .freq-badge {
+            background: rgba(255,255,255,0.25);
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .freq-badge.high { background: rgba(239, 68, 68, 0.3); }
+        .freq-badge.medium { background: rgba(245, 158, 11, 0.3); }
+        .freq-badge.low { background: rgba(16, 185, 129, 0.3); }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            background: var(--bg-secondary);
+            padding: 10px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 30px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-tab {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .nav-tab:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .nav-tab.active {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        /* Sections */
+        .section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 30px;
+            background: var(--accent-primary);
+            border-radius: 2px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        /* Key Points */
+        .key-point {
+            display: flex;
+            gap: 15px;
+            padding: 15px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-md);
+            margin-bottom: 10px;
+            border-left: 4px solid var(--accent-primary);
+        }
+
+        .key-point-number {
+            background: var(--accent-primary);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        /* Prerequisites */
+        .prereq-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .prereq-header {
+            padding: 15px 20px;
+            background: var(--bg-tertiary);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .prereq-header:hover {
+            background: var(--border-color);
+        }
+
+        .prereq-title {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .prereq-badge {
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: var(--accent-warning);
+            color: white;
+        }
+
+        .prereq-badge.internal {
+            background: var(--accent-primary);
+        }
+
+        .prereq-content {
+            padding: 20px;
+            display: none;
+        }
+
+        .prereq-content.active {
+            display: block;
+        }
+
+        .prereq-toggle {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        .prereq-card.open .prereq-toggle {
+            transform: rotate(180deg);
+        }
+
+        /* Problem Types */
+        .problem-type {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .problem-type-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            cursor: pointer;
+            user-select: none;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .problem-type-header:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .problem-type-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .toggle-icon {
+            font-size: 0.9rem;
+            transition: transform 0.3s ease;
+            margin-left: auto;
+            padding-left: 15px;
+        }
+
+        .problem-type.collapsed .toggle-icon {
+            transform: rotate(-90deg);
+        }
+
+        .problem-type-content {
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+            max-height: 5000px;
+            opacity: 1;
+            padding: 0 20px 20px;
+        }
+
+        .problem-type.collapsed .problem-type-content {
+            max-height: 0;
+            opacity: 0;
+            padding: 0 20px;
+        }
+
+        .difficulty-badge {
+            font-size: 0.75rem;
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+
+        .difficulty-badge.easy { background: #d1fae5; color: #065f46; }
+        .difficulty-badge.medium { background: #fef3c7; color: #92400e; }
+        .difficulty-badge.hard { background: #fee2e2; color: #991b1b; }
+
+        [data-theme="dark"] .difficulty-badge.easy { background: #065f46; color: #d1fae5; }
+        [data-theme="dark"] .difficulty-badge.medium { background: #92400e; color: #fef3c7; }
+        [data-theme="dark"] .difficulty-badge.hard { background: #991b1b; color: #fee2e2; }
+
+        /* Pattern Box */
+        .pattern-box {
+            background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-secondary));
+            border: 2px dashed var(--accent-primary);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .pattern-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--accent-primary);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        /* Exam Tip */
+        .exam-tip {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border-left: 4px solid var(--accent-warning);
+            padding: 15px 20px;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            margin: 15px 0;
+        }
+
+        [data-theme="dark"] .exam-tip {
+            background: linear-gradient(135deg, #78350f, #92400e);
+        }
+
+        .exam-tip-label {
+            font-weight: 600;
+            color: var(--accent-warning);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        /* Worked Example */
+        .worked-example {
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .example-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--accent-primary);
+        }
+
+        .example-problem {
+            background: var(--bg-primary);
+            padding: 15px;
+            border-radius: var(--radius-md);
+            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Animation Controls */
+        .animation-container {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .animation-step {
+            padding: 15px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            margin-bottom: 10px;
+            border-left: 4px solid var(--accent-primary);
+            display: none;
+        }
+
+        .animation-step.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .step-number {
+            font-weight: 700;
+            color: var(--accent-primary);
+            margin-bottom: 5px;
+        }
+
+        .step-reasoning {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-color);
+        }
+
+        .animation-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .control-btn:hover {
+            background: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+
+        .control-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 6px;
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+            overflow: hidden;
+            min-width: 100px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-primary);
+            transition: width 0.3s ease;
+        }
+
+        .step-counter {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            min-width: 80px;
+            text-align: center;
+        }
+
+        /* Practice Problem */
+        .practice-problem {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .practice-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--accent-success);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .practice-question {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .practice-options {
+            display: grid;
+            gap: 10px;
+        }
+
+        .practice-option {
+            padding: 12px 15px;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .practice-option:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .practice-option.selected {
+            border-color: var(--accent-primary);
+            background: rgba(67, 97, 238, 0.1);
+        }
+
+        .practice-option.correct {
+            border-color: var(--accent-success);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .practice-option.incorrect {
+            border-color: var(--accent-danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .practice-feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: var(--radius-md);
+            display: none;
+        }
+
+        .practice-feedback.show {
+            display: block;
+        }
+
+        .practice-feedback.correct {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--accent-success);
+        }
+
+        .practice-feedback.incorrect {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--accent-danger);
+        }
+
+        /* Decision Flowchart */
+        .decision-flowchart {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .flowchart-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: var(--accent-primary);
+            text-align: center;
+        }
+
+        .flowchart-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .flowchart-node {
+            padding: 12px 20px;
+            border-radius: var(--radius-md);
+            text-align: center;
+            max-width: 300px;
+        }
+
+        .flowchart-node.question {
+            background: var(--accent-primary);
+            color: white;
+            font-weight: 500;
+        }
+
+        .flowchart-node.answer {
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border-color);
+        }
+
+        .flowchart-node.success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px solid var(--accent-success);
+            color: var(--accent-success);
+        }
+
+        .flowchart-node.warning {
+            background: rgba(245, 158, 11, 0.1);
+            border: 2px solid var(--accent-warning);
+            color: var(--accent-warning);
+        }
+
+        .flowchart-node.danger {
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid var(--accent-danger);
+            color: var(--accent-danger);
+        }
+
+        .flowchart-arrow {
+            font-size: 1.5rem;
+            color: var(--text-muted);
+        }
+
+        .flowchart-branch {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .flowchart-branch-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .flowchart-branch-label {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .flowchart-branch-label.yes {
+            background: var(--accent-success);
+            color: white;
+        }
+
+        .flowchart-branch-label.no {
+            background: var(--accent-danger);
+            color: white;
+        }
+
+        /* Common Mistakes */
+        .mistake-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .mistake-wrong {
+            background: rgba(239, 68, 68, 0.1);
+            padding: 12px 15px;
+            border-radius: var(--radius-md);
+            margin-bottom: 10px;
+            text-decoration: line-through;
+            color: var(--accent-danger);
+        }
+
+        .mistake-correct {
+            background: rgba(16, 185, 129, 0.1);
+            padding: 12px 15px;
+            border-radius: var(--radius-md);
+            margin-bottom: 10px;
+            border-left: 4px solid var(--accent-success);
+        }
+
+        .mistake-reason {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            padding-top: 10px;
+        }
+
+        /* Connections */
+        .connection-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+
+        .connection-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .connection-content h4 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .connection-content p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Graph Container */
+        .graph-container {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        /* Checklist */
+        .checklist {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .checklist-item:last-child {
+            border-bottom: none;
+        }
+
+        .checklist-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .nav-tabs {
+                justify-content: center;
+            }
+
+            .nav-tab {
+                padding: 8px 12px;
+                font-size: 0.85rem;
+            }
+
+            .flowchart-branch {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+
+        /* ========== TRANSLATION POPUP ========== */
+        .translate-popup {
+            position: absolute;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            padding: 8px;
+            z-index: 10000;
+            animation: translateFadeIn 0.2s ease;
+            max-width: 350px;
+        }
+
+        @keyframes translateFadeIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(-5px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        .translate-btn {
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .translate-btn:hover { background: #2563eb; transform: scale(1.02); }
+        .translate-btn:disabled { background: var(--text-muted); cursor: not-allowed; transform: none; }
+
+        .translation-result {
+            margin-top: 8px;
+            padding: 10px 12px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-primary);
+            word-wrap: break-word;
+        }
+
+        .translation-error {
+            color: var(--accent-danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .translate-popup::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: var(--bg-primary);
+        }
+
+        .translate-popup.below::after {
+            top: -8px;
+            bottom: auto;
+            border-top-color: transparent;
+            border-bottom-color: var(--bg-primary);
+        }
+
+        /* ========== INLINE PRACTICE ========== */
+        .inline-practice {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(16, 185, 129, 0.1));
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .inline-practice-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent-success);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .inline-practice-title::before {
+            content: '✏️';
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">🌙</button>
+
+    <header class="header">
+        <div class="header-content">
+            <span class="unit-badge">Unit 1: Limits and Continuity</span>
+            <h1>U1.2 Calculating Limits</h1>
+            <p>Master algebraic techniques for evaluating limits when direct substitution fails</p>
+            <div class="header-meta">
+                <span class="meta-item">📚 CB Topics: 1.5, 1.6, 1.7</span>
+                <span class="meta-item"><span class="freq-badge low">📖 Standard</span></span>
+                <span class="meta-item">⏱️ ~45 min</span>
+                <span class="meta-item">📊 MCQ: 12 questions</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-section="keypoints">Key Points</button>
+            <button class="nav-tab" data-section="prerequisites">Prerequisites</button>
+            <button class="nav-tab" data-section="concepts">Concepts</button>
+            <button class="nav-tab" data-section="problemtypes">Problem Types</button>
+            <button class="nav-tab" data-section="examtips">Exam Tips</button>
+            <button class="nav-tab" data-section="mistakes">Common Mistakes</button>
+            <button class="nav-tab" data-section="connections">Connections</button>
+        </nav>
+
+        <!-- Key Points Section -->
+        <section id="keypoints" class="section active">
+            <h2 class="section-title">Key Points</h2>
+
+            <div class="key-point">
+                <span class="key-point-number">1</span>
+                <div>
+                    <strong>Always try direct substitution first.</strong> If plugging in the value gives a finite number, that's the limit. No further work needed.
+                </div>
+            </div>
+
+            <div class="key-point">
+                <span class="key-point-number">2</span>
+                <div>
+                    <strong>The indeterminate form \(\frac{0}{0}\) is a signal, not an answer.</strong> It means the limit might exist but requires algebraic manipulation to find.
+                </div>
+            </div>
+
+            <div class="key-point">
+                <span class="key-point-number">3</span>
+                <div>
+                    <strong>Factoring cancels the problematic term.</strong> For polynomial limits, factor both numerator and denominator to cancel the \((x-a)\) term causing the zero.
+                </div>
+            </div>
+
+            <div class="key-point">
+                <span class="key-point-number">4</span>
+                <div>
+                    <strong>Rationalization handles radicals.</strong> When you see \(\sqrt{\ }\) in a \(\frac{0}{0}\) form, multiply by the conjugate to eliminate the radical.
+                </div>
+            </div>
+
+            <div class="key-point">
+                <span class="key-point-number">5</span>
+                <div>
+                    <strong>Know the special trig limits:</strong> \(\displaystyle\lim_{x\to 0}\frac{\sin x}{x} = 1\) and \(\displaystyle\lim_{x\to 0}\frac{1-\cos x}{x} = 0\). Many problems reduce to these forms.
+                </div>
+            </div>
+        </section>
+
+        <!-- Prerequisites Section -->
+        <section id="prerequisites" class="section">
+            <h2 class="section-title">Prerequisites</h2>
+
+            <div class="prereq-card">
+                <div class="prereq-header" onclick="togglePrereq(this)">
+                    <span class="prereq-title">
+                        <span class="prereq-badge">PreCalc</span>
+                        Factoring Polynomials
+                    </span>
+                    <span class="prereq-toggle">▼</span>
+                </div>
+                <div class="prereq-content">
+                    <p><strong>Why it matters:</strong> Most \(\frac{0}{0}\) limits with polynomials are solved by factoring to cancel the problematic term.</p>
+
+                    <h4 style="margin: 15px 0 10px;">Essential Factoring Patterns:</h4>
+
+                    <div class="pattern-box">
+                        <div class="pattern-label">Difference of Squares</div>
+                        <p>\(a^2 - b^2 = (a+b)(a-b)\)</p>
+                        <p style="margin-top: 10px; color: var(--text-muted);">Example: \(x^2 - 9 = (x+3)(x-3)\)</p>
+                    </div>
+
+                    <div class="pattern-box">
+                        <div class="pattern-label">Sum/Difference of Cubes</div>
+                        <p>\(a^3 + b^3 = (a+b)(a^2 - ab + b^2)\)</p>
+                        <p>\(a^3 - b^3 = (a-b)(a^2 + ab + b^2)\)</p>
+                    </div>
+
+                    <div class="pattern-box">
+                        <div class="pattern-label">Factoring Quadratics</div>
+                        <p>For \(ax^2 + bx + c\), find factors of \(ac\) that sum to \(b\)</p>
+                        <p style="margin-top: 10px; color: var(--text-muted);">Example: \(x^2 - 5x + 6 = (x-2)(x-3)\)</p>
+                    </div>
+
+                    <div class="practice-problem">
+                        <div class="practice-label">Quick Check</div>
+                        <div class="practice-question">Factor: \(x^2 - 4\)</div>
+                        <div class="practice-options">
+                            <div class="practice-option" data-correct="true">\((x+2)(x-2)\)</div>
+                            <div class="practice-option">\((x-2)(x-2)\)</div>
+                            <div class="practice-option">\((x+4)(x-1)\)</div>
+                            <div class="practice-option">\(x(x-4)\)</div>
+                        </div>
+                        <div class="practice-feedback"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="prereq-card">
+                <div class="prereq-header" onclick="togglePrereq(this)">
+                    <span class="prereq-title">
+                        <span class="prereq-badge">PreCalc</span>
+                        Rationalization (Conjugates)
+                    </span>
+                    <span class="prereq-toggle">▼</span>
+                </div>
+                <div class="prereq-content">
+                    <p><strong>Why it matters:</strong> Limits involving square roots often require multiplying by the conjugate to eliminate the radical.</p>
+
+                    <div class="pattern-box">
+                        <div class="pattern-label">Conjugate Pairs</div>
+                        <p>The conjugate of \(\sqrt{a} + b\) is \(\sqrt{a} - b\)</p>
+                        <p>The conjugate of \(\sqrt{a} - b\) is \(\sqrt{a} + b\)</p>
+                        <p style="margin-top: 10px;"><strong>Key Property:</strong> \((\sqrt{a} + b)(\sqrt{a} - b) = a - b^2\)</p>
+                    </div>
+
+                    <div class="worked-example">
+                        <div class="example-title">Example: Rationalizing</div>
+                        <p>Simplify: \(\frac{1}{\sqrt{x+1} - 1}\)</p>
+                        <p style="margin-top: 10px;">Multiply by conjugate: \(\frac{1}{\sqrt{x+1} - 1} \cdot \frac{\sqrt{x+1} + 1}{\sqrt{x+1} + 1}\)</p>
+                        <p>\(= \frac{\sqrt{x+1} + 1}{(x+1) - 1} = \frac{\sqrt{x+1} + 1}{x}\)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="prereq-card">
+                <div class="prereq-header" onclick="togglePrereq(this)">
+                    <span class="prereq-title">
+                        <span class="prereq-badge internal">Internal</span>
+                        U1.1 Existence of Limits
+                    </span>
+                    <span class="prereq-toggle">▼</span>
+                </div>
+                <div class="prereq-content">
+                    <p>Before calculating limits algebraically, you should understand:</p>
+                    <ul style="margin: 10px 0 10px 20px;">
+                        <li>A limit describes where \(f(x)\) is heading, not where it is</li>
+                        <li>A limit exists only when left-hand limit = right-hand limit</li>
+                        <li>Limit DNE reasons: jump, infinite behavior, or oscillation</li>
+                    </ul>
+                    <p><a href="U1.1-Existence-of-Limit.html" style="color: var(--accent-primary);">→ Review U1.1 Existence of Limits</a></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Concepts Section -->
+        <section id="concepts" class="section">
+            <h2 class="section-title">Core Concepts</h2>
+
+            <div class="card">
+                <h3 class="card-title">The Limit Evaluation Strategy</h3>
+                <p>When evaluating \(\displaystyle\lim_{x \to a} f(x)\), follow this decision process:</p>
+
+                <div class="decision-flowchart">
+                    <div class="flowchart-title">Decision Flowchart: Evaluating Limits</div>
+                    <div class="flowchart-container">
+                        <div class="flowchart-node question">Step 1: Try Direct Substitution<br>Plug in x = a</div>
+                        <div class="flowchart-arrow">↓</div>
+                        <div class="flowchart-branch">
+                            <div class="flowchart-branch-item">
+                                <div class="flowchart-branch-label yes">Finite Number</div>
+                                <div class="flowchart-node success">✓ That's your answer!</div>
+                            </div>
+                            <div class="flowchart-branch-item">
+                                <div class="flowchart-branch-label no">0/0 Form</div>
+                                <div class="flowchart-node answer">→ Continue to Step 2</div>
+                            </div>
+                            <div class="flowchart-branch-item">
+                                <div class="flowchart-branch-label no">k/0 Form (k≠0)</div>
+                                <div class="flowchart-node warning">Limit is ±∞ or DNE</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="decision-flowchart">
+                    <div class="flowchart-title">Decision Flowchart: Handling 0/0 Form</div>
+                    <div class="flowchart-container">
+                        <div class="flowchart-node question">What type of expression?</div>
+                        <div class="flowchart-arrow">↓</div>
+                        <div class="flowchart-branch">
+                            <div class="flowchart-branch-item">
+                                <div class="flowchart-branch-label yes">Polynomials</div>
+                                <div class="flowchart-node answer">Factor and cancel</div>
+                            </div>
+                            <div class="flowchart-branch-item">
+                                <div class="flowchart-branch-label yes">Radicals (√)</div>
+                                <div class="flowchart-node answer">Multiply by conjugate</div>
+                            </div>
+                            <div class="flowchart-branch-item">
+                                <div class="flowchart-branch-label yes">Trig Functions</div>
+                                <div class="flowchart-node answer">Use special limits or identities</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title">Algebraic Properties of Limits</h3>
+                <p>If \(\displaystyle\lim_{x \to a} f(x) = L\) and \(\displaystyle\lim_{x \to a} g(x) = M\), then:</p>
+
+                <div style="display: grid; gap: 10px; margin-top: 15px;">
+                    <div class="pattern-box">
+                        <strong>Sum/Difference:</strong> \(\displaystyle\lim_{x \to a} [f(x) \pm g(x)] = L \pm M\)
+                    </div>
+                    <div class="pattern-box">
+                        <strong>Product:</strong> \(\displaystyle\lim_{x \to a} [f(x) \cdot g(x)] = L \cdot M\)
+                    </div>
+                    <div class="pattern-box">
+                        <strong>Quotient:</strong> \(\displaystyle\lim_{x \to a} \frac{f(x)}{g(x)} = \frac{L}{M}\) (if \(M \neq 0\))
+                    </div>
+                    <div class="pattern-box">
+                        <strong>Constant Multiple:</strong> \(\displaystyle\lim_{x \to a} [c \cdot f(x)] = c \cdot L\)
+                    </div>
+                    <div class="pattern-box">
+                        <strong>Power:</strong> \(\displaystyle\lim_{x \to a} [f(x)]^n = L^n\)
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title">Special Trigonometric Limits</h3>
+                <p>These two limits are fundamental and must be memorized:</p>
+
+                <div class="pattern-box" style="margin-top: 15px;">
+                    <div class="pattern-label">Essential Trig Limit #1</div>
+                    <p style="font-size: 1.3rem; text-align: center;">\(\displaystyle\lim_{x \to 0} \frac{\sin x}{x} = 1\)</p>
+                </div>
+
+                <div class="pattern-box">
+                    <div class="pattern-label">Essential Trig Limit #2</div>
+                    <p style="font-size: 1.3rem; text-align: center;">\(\displaystyle\lim_{x \to 0} \frac{1 - \cos x}{x} = 0\)</p>
+                </div>
+
+                <div class="exam-tip">
+                    <div class="exam-tip-label">💡 EXAM TIP</div>
+                    Many problems are designed so you can rewrite them to match these forms. Look for ways to manipulate the expression!
+                </div>
+
+                <div class="graph-container" id="sinx-over-x-graph"></div>
+            </div>
+        </section>
+
+        <!-- Problem Types Section -->
+        <section id="problemtypes" class="section">
+            <h2 class="section-title">Problem Types</h2>
+
+            <!-- Type 1: Direct Substitution -->
+            <div class="problem-type collapsed" id="problem-type-1">
+                <div class="problem-type-header">
+                    <span class="problem-type-title">Type 1: Direct Substitution</span>
+                    <span class="difficulty-badge easy">Basic</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="problem-type-content">
+                    <div class="pattern-box">
+                        <div class="pattern-label">Recognition Pattern</div>
+                        <p>Substitute the value and get a finite number (not 0/0, ∞/∞, etc.)</p>
+                    </div>
+
+                    <div class="exam-tip">
+                        <div class="exam-tip-label">💡 EXAM TIP</div>
+                        Always try this first! About 30% of limit problems on the AP exam can be solved by direct substitution alone.
+                    </div>
+
+                    <div class="worked-example">
+                        <div class="example-title">Worked Example</div>
+                        <div class="example-problem">
+                            Evaluate: \(\displaystyle\lim_{x \to 3} (x^2 + 2x - 1)\)
+                        </div>
+
+                        <div class="animation-container" id="anim-direct-sub">
+                            <div class="animation-step" data-step="1">
+                                <div class="step-number">Step 1: Try substituting x = 3</div>
+                                <p>\(f(3) = (3)^2 + 2(3) - 1\)</p>
+                                <div class="step-reasoning">💭 Why? Always try direct substitution first—it's the quickest method.</div>
+                            </div>
+                            <div class="animation-step" data-step="2">
+                                <div class="step-number">Step 2: Calculate</div>
+                                <p>\(= 9 + 6 - 1 = 14\)</p>
+                                <div class="step-reasoning">💭 We got a finite number! No indeterminate form.</div>
+                            </div>
+                            <div class="animation-step" data-step="3">
+                                <div class="step-number">Step 3: Conclusion</div>
+                                <p>\(\displaystyle\lim_{x \to 3} (x^2 + 2x - 1) = 14\)</p>
+                                <div class="step-reasoning">💭 Since substitution worked, this IS the answer. No further work needed!</div>
+                            </div>
+                            <div class="animation-controls">
+                                <button class="control-btn" onclick="animPrev('anim-direct-sub')">← Prev</button>
+                                <button class="control-btn" onclick="animNext('anim-direct-sub')">Next →</button>
+                                <div class="progress-bar"><div class="progress-fill" style="width: 33%"></div></div>
+                                <span class="step-counter">Step 1 of 3</span>
+                                <button class="control-btn" onclick="animReset('anim-direct-sub')">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="practice-problem">
+                        <div class="practice-label">Practice Problem</div>
+                        <div class="practice-question">Evaluate: \(\displaystyle\lim_{x \to 2} \frac{x^2 + 1}{x + 3}\)</div>
+                        <div class="practice-options">
+                            <div class="practice-option" data-correct="true">1</div>
+                            <div class="practice-option">5/5 = 1</div>
+                            <div class="practice-option">\(\frac{5}{3}\)</div>
+                            <div class="practice-option">Does not exist</div>
+                        </div>
+                        <div class="practice-feedback"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Type 2: Factoring -->
+            <div class="problem-type collapsed" id="problem-type-2">
+                <div class="problem-type-header">
+                    <span class="problem-type-title">Type 2: Factoring to Cancel</span>
+                    <span class="difficulty-badge medium">Intermediate</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="problem-type-content">
+                    <div class="pattern-box">
+                        <div class="pattern-label">Recognition Pattern</div>
+                        <p>You get \(\frac{0}{0}\) form AND the expression involves polynomials</p>
+                        <p style="margin-top: 10px;"><strong>Strategy:</strong> Factor numerator and denominator, cancel common factor \((x-a)\)</p>
+                    </div>
+
+                    <div class="exam-tip">
+                        <div class="exam-tip-label">💡 EXAM TIP</div>
+                        The factor \((x-a)\) WILL cancel when \(\lim_{x\to a}\) gives 0/0. If it doesn't factor nicely, you might need a different technique.
+                    </div>
+
+                    <div class="worked-example">
+                        <div class="example-title">Worked Example</div>
+                        <div class="example-problem">
+                            Evaluate: \(\displaystyle\lim_{x \to 2} \frac{x^2 - 4}{x - 2}\)
+                        </div>
+
+                        <div class="animation-container" id="anim-factoring">
+                            <div class="animation-step" data-step="1">
+                                <div class="step-number">Step 1: Try direct substitution</div>
+                                <p>\(\frac{(2)^2 - 4}{2 - 2} = \frac{4-4}{0} = \frac{0}{0}\)</p>
+                                <div class="step-reasoning">💭 We get 0/0! This is indeterminate—the limit might still exist.</div>
+                            </div>
+                            <div class="animation-step" data-step="2">
+                                <div class="step-number">Step 2: Factor the numerator</div>
+                                <p>\(x^2 - 4 = (x+2)(x-2)\) (difference of squares)</p>
+                                <div class="step-reasoning">💭 Look for common factoring patterns. Here, \(a^2 - b^2 = (a+b)(a-b)\).</div>
+                            </div>
+                            <div class="animation-step" data-step="3">
+                                <div class="step-number">Step 3: Rewrite and cancel</div>
+                                <p>\(\displaystyle\lim_{x \to 2} \frac{(x+2)(x-2)}{x - 2} = \lim_{x \to 2} (x+2)\)</p>
+                                <div class="step-reasoning">💭 The \((x-2)\) factors cancel! We can cancel because \(x \neq 2\) as \(x \to 2\).</div>
+                            </div>
+                            <div class="animation-step" data-step="4">
+                                <div class="step-number">Step 4: Evaluate the simplified limit</div>
+                                <p>\(\displaystyle\lim_{x \to 2} (x+2) = 2 + 2 = 4\)</p>
+                                <div class="step-reasoning">💭 Now direct substitution works! The limit equals 4.</div>
+                            </div>
+                            <div class="animation-controls">
+                                <button class="control-btn" onclick="animPrev('anim-factoring')">← Prev</button>
+                                <button class="control-btn" onclick="animNext('anim-factoring')">Next →</button>
+                                <div class="progress-bar"><div class="progress-fill" style="width: 25%"></div></div>
+                                <span class="step-counter">Step 1 of 4</span>
+                                <button class="control-btn" onclick="animReset('anim-factoring')">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="practice-problem">
+                        <div class="practice-label">Practice Problem</div>
+                        <div class="practice-question">Evaluate: \(\displaystyle\lim_{x \to 3} \frac{x^2 - 9}{x - 3}\)</div>
+                        <div class="practice-options">
+                            <div class="practice-option">0</div>
+                            <div class="practice-option">3</div>
+                            <div class="practice-option" data-correct="true">6</div>
+                            <div class="practice-option">Does not exist</div>
+                        </div>
+                        <div class="practice-feedback"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Type 3: Rationalization -->
+            <div class="problem-type collapsed" id="problem-type-3">
+                <div class="problem-type-header">
+                    <span class="problem-type-title">Type 3: Rationalization (Conjugate)</span>
+                    <span class="difficulty-badge medium">Intermediate</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="problem-type-content">
+                    <div class="pattern-box">
+                        <div class="pattern-label">Recognition Pattern</div>
+                        <p>You get \(\frac{0}{0}\) form AND the expression contains square roots</p>
+                        <p style="margin-top: 10px;"><strong>Strategy:</strong> Multiply by conjugate / conjugate</p>
+                    </div>
+
+                    <div class="exam-tip">
+                        <div class="exam-tip-label">💡 EXAM TIP</div>
+                        When you see a radical in a 0/0 limit, think "conjugate" immediately. This technique almost always applies!
+                    </div>
+
+                    <div class="worked-example">
+                        <div class="example-title">Worked Example</div>
+                        <div class="example-problem">
+                            Evaluate: \(\displaystyle\lim_{x \to 0} \frac{\sqrt{x+1} - 1}{x}\)
+                        </div>
+
+                        <div class="animation-container" id="anim-rationalize">
+                            <div class="animation-step" data-step="1">
+                                <div class="step-number">Step 1: Try direct substitution</div>
+                                <p>\(\frac{\sqrt{0+1} - 1}{0} = \frac{1-1}{0} = \frac{0}{0}\)</p>
+                                <div class="step-reasoning">💭 Indeterminate form with a radical—time to rationalize!</div>
+                            </div>
+                            <div class="animation-step" data-step="2">
+                                <div class="step-number">Step 2: Identify the conjugate</div>
+                                <p>Conjugate of \(\sqrt{x+1} - 1\) is \(\sqrt{x+1} + 1\)</p>
+                                <div class="step-reasoning">💭 The conjugate flips the sign between terms.</div>
+                            </div>
+                            <div class="animation-step" data-step="3">
+                                <div class="step-number">Step 3: Multiply by conjugate/conjugate</div>
+                                <p>\(\displaystyle\lim_{x \to 0} \frac{\sqrt{x+1} - 1}{x} \cdot \frac{\sqrt{x+1} + 1}{\sqrt{x+1} + 1}\)</p>
+                                <div class="step-reasoning">💭 This equals 1, so we're not changing the value—just the form.</div>
+                            </div>
+                            <div class="animation-step" data-step="4">
+                                <div class="step-number">Step 4: Simplify numerator using \((a-b)(a+b) = a^2-b^2\)</div>
+                                <p>\(= \displaystyle\lim_{x \to 0} \frac{(x+1) - 1}{x(\sqrt{x+1} + 1)} = \lim_{x \to 0} \frac{x}{x(\sqrt{x+1} + 1)}\)</p>
+                                <div class="step-reasoning">💭 The radical is eliminated from the numerator!</div>
+                            </div>
+                            <div class="animation-step" data-step="5">
+                                <div class="step-number">Step 5: Cancel and evaluate</div>
+                                <p>\(= \displaystyle\lim_{x \to 0} \frac{1}{\sqrt{x+1} + 1} = \frac{1}{\sqrt{1} + 1} = \frac{1}{2}\)</p>
+                                <div class="step-reasoning">💭 Cancel x, then substitute. The limit is 1/2.</div>
+                            </div>
+                            <div class="animation-controls">
+                                <button class="control-btn" onclick="animPrev('anim-rationalize')">← Prev</button>
+                                <button class="control-btn" onclick="animNext('anim-rationalize')">Next →</button>
+                                <div class="progress-bar"><div class="progress-fill" style="width: 20%"></div></div>
+                                <span class="step-counter">Step 1 of 5</span>
+                                <button class="control-btn" onclick="animReset('anim-rationalize')">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="practice-problem">
+                        <div class="practice-label">Practice Problem</div>
+                        <div class="practice-question">Evaluate: \(\displaystyle\lim_{x \to 0} \frac{\sqrt{4+x} - 2}{x}\)</div>
+                        <div class="practice-options">
+                            <div class="practice-option">0</div>
+                            <div class="practice-option" data-correct="true">\(\frac{1}{4}\)</div>
+                            <div class="practice-option">\(\frac{1}{2}\)</div>
+                            <div class="practice-option">Does not exist</div>
+                        </div>
+                        <div class="practice-feedback"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Type 4: Trig Limits -->
+            <div class="problem-type collapsed" id="problem-type-4">
+                <div class="problem-type-header">
+                    <span class="problem-type-title">Type 4: Trigonometric Limit Identities</span>
+                    <span class="difficulty-badge medium">Intermediate</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="problem-type-content">
+                    <div class="pattern-box">
+                        <div class="pattern-label">Recognition Pattern</div>
+                        <p>Expression involves \(\sin\) or \(\cos\) near \(x = 0\)</p>
+                        <p style="margin-top: 10px;"><strong>Key identities:</strong></p>
+                        <p>\(\displaystyle\lim_{x \to 0} \frac{\sin x}{x} = 1\) and \(\displaystyle\lim_{x \to 0} \frac{1-\cos x}{x} = 0\)</p>
+                    </div>
+
+                    <div class="exam-tip">
+                        <div class="exam-tip-label">💡 EXAM TIP</div>
+                        Rewrite expressions to match these forms. If you see \(\frac{\sin(3x)}{x}\), multiply by \(\frac{3}{3}\) to get \(3 \cdot \frac{\sin(3x)}{3x}\).
+                    </div>
+
+                    <div class="worked-example">
+                        <div class="example-title">Worked Example</div>
+                        <div class="example-problem">
+                            Evaluate: \(\displaystyle\lim_{x \to 0} \frac{\sin(5x)}{x}\)
+                        </div>
+
+                        <div class="animation-container" id="anim-trig">
+                            <div class="animation-step" data-step="1">
+                                <div class="step-number">Step 1: Check the form</div>
+                                <p>\(\frac{\sin(5 \cdot 0)}{0} = \frac{0}{0}\)</p>
+                                <div class="step-reasoning">💭 Indeterminate, but we have sin in the numerator—use the trig limit!</div>
+                            </div>
+                            <div class="animation-step" data-step="2">
+                                <div class="step-number">Step 2: Manipulate to match \(\frac{\sin(\theta)}{\theta}\) form</div>
+                                <p>\(\displaystyle\lim_{x \to 0} \frac{\sin(5x)}{x} = \lim_{x \to 0} \frac{\sin(5x)}{x} \cdot \frac{5}{5}\)</p>
+                                <div class="step-reasoning">💭 Multiply by 5/5 to create matching argument in numerator and denominator.</div>
+                            </div>
+                            <div class="animation-step" data-step="3">
+                                <div class="step-number">Step 3: Rewrite</div>
+                                <p>\(= \displaystyle\lim_{x \to 0} 5 \cdot \frac{\sin(5x)}{5x}\)</p>
+                                <div class="step-reasoning">💭 Now \(\frac{\sin(5x)}{5x}\) has the form \(\frac{\sin(\theta)}{\theta}\) where \(\theta = 5x\).</div>
+                            </div>
+                            <div class="animation-step" data-step="4">
+                                <div class="step-number">Step 4: Apply the limit identity</div>
+                                <p>\(= 5 \cdot 1 = 5\)</p>
+                                <div class="step-reasoning">💭 As \(x \to 0\), \(5x \to 0\), so \(\frac{\sin(5x)}{5x} \to 1\).</div>
+                            </div>
+                            <div class="animation-controls">
+                                <button class="control-btn" onclick="animPrev('anim-trig')">← Prev</button>
+                                <button class="control-btn" onclick="animNext('anim-trig')">Next →</button>
+                                <div class="progress-bar"><div class="progress-fill" style="width: 25%"></div></div>
+                                <span class="step-counter">Step 1 of 4</span>
+                                <button class="control-btn" onclick="animReset('anim-trig')">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="practice-problem">
+                        <div class="practice-label">Practice Problem</div>
+                        <div class="practice-question">Evaluate: \(\displaystyle\lim_{x \to 0} \frac{\sin(2x)}{3x}\)</div>
+                        <div class="practice-options">
+                            <div class="practice-option">\(\frac{1}{3}\)</div>
+                            <div class="practice-option" data-correct="true">\(\frac{2}{3}\)</div>
+                            <div class="practice-option">1</div>
+                            <div class="practice-option">\(\frac{3}{2}\)</div>
+                        </div>
+                        <div class="practice-feedback"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Type 5: Complex Fractions -->
+            <div class="problem-type collapsed" id="problem-type-5">
+                <div class="problem-type-header">
+                    <span class="problem-type-title">Type 5: Complex Fraction Simplification</span>
+                    <span class="difficulty-badge hard">Advanced</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="problem-type-content">
+                    <div class="pattern-box">
+                        <div class="pattern-label">Recognition Pattern</div>
+                        <p>Compound fractions (fractions within fractions) that give 0/0</p>
+                        <p style="margin-top: 10px;"><strong>Strategy:</strong> Find common denominator and simplify before taking the limit</p>
+                    </div>
+
+                    <div class="worked-example">
+                        <div class="example-title">Worked Example</div>
+                        <div class="example-problem">
+                            Evaluate: \(\displaystyle\lim_{x \to 0} \frac{\frac{1}{x+2} - \frac{1}{2}}{x}\)
+                        </div>
+
+                        <div class="animation-container" id="anim-complex">
+                            <div class="animation-step" data-step="1">
+                                <div class="step-number">Step 1: Check form</div>
+                                <p>\(\frac{\frac{1}{2} - \frac{1}{2}}{0} = \frac{0}{0}\)</p>
+                                <div class="step-reasoning">💭 Indeterminate form with complex fraction—simplify first.</div>
+                            </div>
+                            <div class="animation-step" data-step="2">
+                                <div class="step-number">Step 2: Find common denominator in numerator</div>
+                                <p>\(\frac{1}{x+2} - \frac{1}{2} = \frac{2 - (x+2)}{2(x+2)} = \frac{-x}{2(x+2)}\)</p>
+                                <div class="step-reasoning">💭 Combine the fractions in the numerator into one fraction.</div>
+                            </div>
+                            <div class="animation-step" data-step="3">
+                                <div class="step-number">Step 3: Rewrite the entire expression</div>
+                                <p>\(\displaystyle\lim_{x \to 0} \frac{\frac{-x}{2(x+2)}}{x} = \lim_{x \to 0} \frac{-x}{2(x+2)} \cdot \frac{1}{x}\)</p>
+                                <div class="step-reasoning">💭 Dividing by x is the same as multiplying by 1/x.</div>
+                            </div>
+                            <div class="animation-step" data-step="4">
+                                <div class="step-number">Step 4: Simplify and evaluate</div>
+                                <p>\(= \displaystyle\lim_{x \to 0} \frac{-1}{2(x+2)} = \frac{-1}{2(2)} = -\frac{1}{4}\)</p>
+                                <div class="step-reasoning">💭 The x's cancel, then we can substitute directly.</div>
+                            </div>
+                            <div class="animation-controls">
+                                <button class="control-btn" onclick="animPrev('anim-complex')">← Prev</button>
+                                <button class="control-btn" onclick="animNext('anim-complex')">Next →</button>
+                                <div class="progress-bar"><div class="progress-fill" style="width: 25%"></div></div>
+                                <span class="step-counter">Step 1 of 4</span>
+                                <button class="control-btn" onclick="animReset('anim-complex')">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="inline-practice">
+                        <h4 class="inline-practice-title">Practice This Type</h4>
+                        <div class="practice-problem">
+                            <div class="practice-label">Practice Problem</div>
+                            <div class="practice-question">Evaluate: \(\displaystyle\lim_{x \to 0} \frac{\frac{1}{3+x} - \frac{1}{3}}{x}\)</div>
+                            <div class="practice-options">
+                                <div class="practice-option">\(\frac{1}{3}\)</div>
+                                <div class="practice-option" data-correct="true">\(-\frac{1}{9}\)</div>
+                                <div class="practice-option">\(\frac{1}{9}\)</div>
+                                <div class="practice-option">Does not exist</div>
+                            </div>
+                            <div class="practice-feedback"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Exam Tips Section -->
+        <section id="examtips" class="section">
+            <h2 class="section-title">Exam Tips</h2>
+
+            <div class="decision-flowchart">
+                <div class="flowchart-title">Master Decision Tree: Which Technique to Use?</div>
+                <div class="flowchart-container">
+                    <div class="flowchart-node question">Try Direct Substitution</div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-branch">
+                        <div class="flowchart-branch-item">
+                            <div class="flowchart-branch-label yes">Works</div>
+                            <div class="flowchart-node success">Done! ✓</div>
+                        </div>
+                        <div class="flowchart-branch-item">
+                            <div class="flowchart-branch-label no">0/0</div>
+                            <div class="flowchart-node answer">Check expression type ↓</div>
+                        </div>
+                    </div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-node question">What type of expression?</div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-branch">
+                        <div class="flowchart-branch-item">
+                            <div class="flowchart-branch-label yes">Polynomial</div>
+                            <div class="flowchart-node answer">Factor & cancel</div>
+                        </div>
+                        <div class="flowchart-branch-item">
+                            <div class="flowchart-branch-label yes">√ Radical</div>
+                            <div class="flowchart-node answer">Multiply by conjugate</div>
+                        </div>
+                        <div class="flowchart-branch-item">
+                            <div class="flowchart-branch-label yes">sin/cos at 0</div>
+                            <div class="flowchart-node answer">Use trig identities</div>
+                        </div>
+                        <div class="flowchart-branch-item">
+                            <div class="flowchart-branch-label yes">Complex fraction</div>
+                            <div class="flowchart-node answer">Find common denom</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title">Time-Saving Tips</h3>
+                <div class="exam-tip">
+                    <div class="exam-tip-label">💡 TIP #1: Always Try Direct Substitution First</div>
+                    About 30% of limit problems work with direct substitution. Don't waste time on complex algebra if simple substitution works!
+                </div>
+
+                <div class="exam-tip">
+                    <div class="exam-tip-label">💡 TIP #2: Recognize \(\frac{0}{0}\) as a Signal</div>
+                    When you get 0/0, it means the limit probably EXISTS but needs algebraic work. Don't write "undefined"!
+                </div>
+
+                <div class="exam-tip">
+                    <div class="exam-tip-label">💡 TIP #3: Match Arguments in Trig Limits</div>
+                    For \(\lim_{x \to 0} \frac{\sin(ax)}{bx}\), rewrite as \(\frac{a}{b} \cdot \frac{\sin(ax)}{ax} = \frac{a}{b}\).
+                </div>
+
+                <div class="exam-tip">
+                    <div class="exam-tip-label">💡 TIP #4: See √, Think Conjugate</div>
+                    When a limit has a radical and gives 0/0, multiplying by the conjugate almost always works.
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title">AP Multiple Choice Strategy</h3>
+                <p>For limit problems on the MC section:</p>
+                <ol style="margin: 15px 0 0 20px;">
+                    <li>Try substitution (5 seconds)</li>
+                    <li>If 0/0, identify the technique based on expression type</li>
+                    <li>Apply ONE algebraic step, then check if you can substitute</li>
+                    <li>For trig limits, rewrite to match the standard forms</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- Common Mistakes Section -->
+        <section id="mistakes" class="section">
+            <h2 class="section-title">Common Mistakes</h2>
+
+            <div class="decision-flowchart">
+                <div class="flowchart-title">Verification Checklist: Avoid These Errors</div>
+                <div class="flowchart-container">
+                    <div class="flowchart-node question">Did you try direct substitution first?</div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-branch">
+                        <div class="flowchart-branch-item">
+                            <div class="flowchart-branch-label yes">YES</div>
+                            <div class="flowchart-node answer">Continue ↓</div>
+                        </div>
+                        <div class="flowchart-branch-item">
+                            <div class="flowchart-branch-label no">NO</div>
+                            <div class="flowchart-node danger">Go back! Try it first.</div>
+                        </div>
+                    </div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-node question">If 0/0, did you actually simplify?</div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-branch">
+                        <div class="flowchart-branch-item">
+                            <div class="flowchart-branch-label yes">YES</div>
+                            <div class="flowchart-node answer">Continue ↓</div>
+                        </div>
+                        <div class="flowchart-branch-item">
+                            <div class="flowchart-branch-label no">NO</div>
+                            <div class="flowchart-node danger">0/0 ≠ DNE. Simplify!</div>
+                        </div>
+                    </div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-node success">Ready to submit ✓</div>
+                </div>
+            </div>
+
+            <div class="mistake-item">
+                <h4>Mistake #1: Writing 0/0 = 0 or 0/0 = "undefined"</h4>
+                <div class="mistake-wrong">\(\displaystyle\lim_{x \to 2} \frac{x^2-4}{x-2} = \frac{0}{0} = 0\) ✗</div>
+                <div class="mistake-correct">
+                    <strong>Correct:</strong> 0/0 is indeterminate. Factor and cancel:<br>
+                    \(\displaystyle\lim_{x \to 2} \frac{(x+2)(x-2)}{x-2} = \lim_{x \to 2}(x+2) = 4\)
+                </div>
+                <div class="mistake-reason">
+                    <strong>Why this happens:</strong> Students confuse "indeterminate" with "undefined." The 0/0 form just means more work is needed—the limit often exists!
+                </div>
+            </div>
+
+            <div class="mistake-item">
+                <h4>Mistake #2: Forgetting to match arguments in trig limits</h4>
+                <div class="mistake-wrong">\(\displaystyle\lim_{x \to 0} \frac{\sin(3x)}{x} = 1\) ✗</div>
+                <div class="mistake-correct">
+                    <strong>Correct:</strong> The argument must match:<br>
+                    \(\displaystyle\lim_{x \to 0} \frac{\sin(3x)}{x} = 3 \cdot \lim_{x \to 0}\frac{\sin(3x)}{3x} = 3 \cdot 1 = 3\)
+                </div>
+                <div class="mistake-reason">
+                    <strong>Why this happens:</strong> Students memorize \(\frac{\sin x}{x} \to 1\) without understanding that both arguments must be the same.
+                </div>
+            </div>
+
+            <div class="mistake-item">
+                <h4>Mistake #3: Canceling before factoring completely</h4>
+                <div class="mistake-wrong">\(\displaystyle\lim_{x \to 1} \frac{x^2 - 1}{x^2 - x}\) "Can't simplify" ✗</div>
+                <div class="mistake-correct">
+                    <strong>Correct:</strong> Factor both parts:<br>
+                    \(\displaystyle\lim_{x \to 1} \frac{(x-1)(x+1)}{x(x-1)} = \lim_{x \to 1} \frac{x+1}{x} = \frac{2}{1} = 2\)
+                </div>
+                <div class="mistake-reason">
+                    <strong>Why this happens:</strong> Students don't factor the denominator \(x^2 - x = x(x-1)\).
+                </div>
+            </div>
+
+            <div class="mistake-item">
+                <h4>Mistake #4: Using L'Hôpital's Rule too early (in Calc 1)</h4>
+                <div class="mistake-correct">
+                    <strong>Note:</strong> L'Hôpital's Rule (covered in U4.5) is a powerful shortcut, but this section tests algebraic manipulation. Show algebraic work unless L'Hôpital is explicitly allowed.
+                </div>
+            </div>
+        </section>
+
+        <!-- Connections Section -->
+        <section id="connections" class="section">
+            <h2 class="section-title">Forward Connections</h2>
+
+            <div class="connection-card">
+                <div class="connection-icon">📐</div>
+                <div class="connection-content">
+                    <h4>U1.3 Squeeze Theorem</h4>
+                    <p>For limits that can't be calculated algebraically (like oscillating functions), the Squeeze Theorem provides another approach. It uses bounding to find limits.</p>
+                </div>
+            </div>
+
+            <div class="connection-card">
+                <div class="connection-icon">📊</div>
+                <div class="connection-content">
+                    <h4>U1.4 Continuity</h4>
+                    <p>Continuity at a point requires the limit to equal the function value. Your limit calculation skills are essential for determining continuity.</p>
+                </div>
+            </div>
+
+            <div class="connection-card">
+                <div class="connection-icon">📈</div>
+                <div class="connection-content">
+                    <h4>U2.2 Definition of Derivative</h4>
+                    <p>The derivative is defined as a limit: \(f'(x) = \lim_{h \to 0} \frac{f(x+h)-f(x)}{h}\). This always gives 0/0, so you'll use these techniques constantly!</p>
+                </div>
+            </div>
+
+            <div class="connection-card">
+                <div class="connection-icon">⚡</div>
+                <div class="connection-content">
+                    <h4>U4.5 L'Hôpital's Rule</h4>
+                    <p>Later you'll learn L'Hôpital's Rule, which uses derivatives to evaluate 0/0 limits. But algebraic methods remain important—L'Hôpital requires more conditions!</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title">Self-Assessment Checklist</h3>
+                <div class="checklist">
+                    <div class="checklist-item">
+                        <input type="checkbox" class="checklist-checkbox" id="check1">
+                        <label for="check1">I can evaluate limits using direct substitution</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" class="checklist-checkbox" id="check2">
+                        <label for="check2">I can recognize when 0/0 form requires algebraic manipulation</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" class="checklist-checkbox" id="check3">
+                        <label for="check3">I can factor and cancel to evaluate polynomial limits</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" class="checklist-checkbox" id="check4">
+                        <label for="check4">I can rationalize limits involving radicals</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" class="checklist-checkbox" id="check5">
+                        <label for="check5">I know and can apply \(\lim_{x \to 0} \frac{\sin x}{x} = 1\)</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" class="checklist-checkbox" id="check6">
+                        <label for="check6">I can choose the correct technique based on expression type</label>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Theme Toggle
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            document.querySelector('.theme-toggle').textContent = newTheme === 'dark' ? '☀️' : '🌙';
+
+            // Re-render graphs with new theme
+            renderGraphs();
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.body.setAttribute('data-theme', savedTheme);
+        document.querySelector('.theme-toggle').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+        // Navigation
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+
+                tab.classList.add('active');
+                const sectionId = tab.getAttribute('data-section');
+                document.getElementById(sectionId).classList.add('active');
+            });
+        });
+
+        // Prerequisites Toggle
+        function togglePrereq(header) {
+            const card = header.parentElement;
+            const content = card.querySelector('.prereq-content');
+
+            card.classList.toggle('open');
+            content.classList.toggle('active');
+        }
+
+        // Problem Type Accordion
+        document.querySelectorAll('.problem-type .problem-type-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const parent = header.parentElement;
+                const wasCollapsed = parent.classList.contains('collapsed');
+
+                // Collapse all problem types first
+                document.querySelectorAll('.problem-type[id^="problem-type-"]').forEach(pt => {
+                    pt.classList.add('collapsed');
+                });
+
+                // If it was collapsed, expand it
+                if (wasCollapsed) {
+                    parent.classList.remove('collapsed');
+                }
+            });
+        });
+
+        // Animation System
+        const animations = {};
+
+        function initAnimation(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            const steps = container.querySelectorAll('.animation-step');
+            animations[containerId] = {
+                currentStep: 1,
+                totalSteps: steps.length
+            };
+
+            updateAnimation(containerId);
+        }
+
+        function updateAnimation(containerId) {
+            const container = document.getElementById(containerId);
+            const anim = animations[containerId];
+
+            container.querySelectorAll('.animation-step').forEach((step, index) => {
+                step.classList.toggle('active', index + 1 === anim.currentStep);
+            });
+
+            const progressFill = container.querySelector('.progress-fill');
+            const stepCounter = container.querySelector('.step-counter');
+
+            progressFill.style.width = `${(anim.currentStep / anim.totalSteps) * 100}%`;
+            stepCounter.textContent = `Step ${anim.currentStep} of ${anim.totalSteps}`;
+        }
+
+        function animNext(containerId) {
+            const anim = animations[containerId];
+            if (anim.currentStep < anim.totalSteps) {
+                anim.currentStep++;
+                updateAnimation(containerId);
+            }
+        }
+
+        function animPrev(containerId) {
+            const anim = animations[containerId];
+            if (anim.currentStep > 1) {
+                anim.currentStep--;
+                updateAnimation(containerId);
+            }
+        }
+
+        function animReset(containerId) {
+            animations[containerId].currentStep = 1;
+            updateAnimation(containerId);
+        }
+
+        // Practice Problem Handler
+        document.querySelectorAll('.practice-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const problem = this.closest('.practice-problem');
+                const options = problem.querySelectorAll('.practice-option');
+                const feedback = problem.querySelector('.practice-feedback');
+
+                // Remove previous selections
+                options.forEach(opt => {
+                    opt.classList.remove('selected', 'correct', 'incorrect');
+                });
+
+                this.classList.add('selected');
+
+                const isCorrect = this.getAttribute('data-correct') === 'true';
+
+                if (isCorrect) {
+                    this.classList.add('correct');
+                    feedback.textContent = '✓ Correct! Great work.';
+                    feedback.className = 'practice-feedback show correct';
+                } else {
+                    this.classList.add('incorrect');
+                    const correctOption = problem.querySelector('[data-correct="true"]');
+                    correctOption.classList.add('correct');
+                    feedback.textContent = '✗ Not quite. The correct answer is highlighted.';
+                    feedback.className = 'practice-feedback show incorrect';
+                }
+            });
+        });
+
+        // Render Graphs
+        function renderGraphs() {
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
+            const bgColor = isDark ? '#1a1a2e' : '#ffffff';
+            const textColor = isDark ? '#eef0f2' : '#212529';
+            const gridColor = isDark ? '#2d3748' : '#e9ecef';
+
+            // sin(x)/x graph
+            const sinxDiv = document.getElementById('sinx-over-x-graph');
+            if (sinxDiv) {
+                const x = [];
+                const y = [];
+                for (let i = -4; i <= 4; i += 0.01) {
+                    if (Math.abs(i) > 0.001) {
+                        x.push(i);
+                        y.push(Math.sin(i) / i);
+                    }
+                }
+
+                Plotly.newPlot('sinx-over-x-graph', [{
+                    x: x,
+                    y: y,
+                    type: 'scatter',
+                    mode: 'lines',
+                    line: { color: '#4361ee', width: 2 },
+                    name: 'sin(x)/x'
+                }], {
+                    title: {
+                        text: 'Graph of y = sin(x)/x',
+                        font: { color: textColor }
+                    },
+                    xaxis: {
+                        title: 'x',
+                        gridcolor: gridColor,
+                        zerolinecolor: textColor,
+                        tickfont: { color: textColor }
+                    },
+                    yaxis: {
+                        title: 'y',
+                        gridcolor: gridColor,
+                        zerolinecolor: textColor,
+                        tickfont: { color: textColor },
+                        range: [0, 1.2]
+                    },
+                    paper_bgcolor: bgColor,
+                    plot_bgcolor: bgColor,
+                    font: { color: textColor },
+                    showlegend: false,
+                    annotations: [{
+                        x: 0,
+                        y: 1,
+                        text: 'Limit = 1',
+                        showarrow: true,
+                        arrowhead: 2,
+                        ax: 40,
+                        ay: -40,
+                        font: { color: textColor }
+                    }]
+                }, {
+                    responsive: true
+                });
+            }
+        }
+
+        // KaTeX rendering
+        document.addEventListener('DOMContentLoaded', function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '\\[', right: '\\]', display: true},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '$', right: '$', display: false}
+                ],
+                throwOnError: false
+            });
+
+            // Initialize animations
+            initAnimation('anim-direct-sub');
+            initAnimation('anim-factoring');
+            initAnimation('anim-rationalize');
+            initAnimation('anim-trig');
+            initAnimation('anim-complex');
+
+            // Render graphs
+            renderGraphs();
+        });
+
+        // ============================================
+        // TRANSLATION FEATURE
+        // ============================================
+        const TRANSLATION_CONFIG = {
+            endpoint: '/api/translate',
+            maxLength: 2000
+        };
+
+        async function translateToChinese(text) {
+            if (text.length > TRANSLATION_CONFIG.maxLength) {
+                text = text.substring(0, TRANSLATION_CONFIG.maxLength);
+            }
+
+            const response = await fetch(TRANSLATION_CONFIG.endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text, source: 'auto', target: 'zh' })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Translation failed: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data.translation;
+        }
+
+        let translatePopup = null;
+
+        function clearTranslatePopup() {
+            if (translatePopup) {
+                translatePopup.remove();
+                translatePopup = null;
+            }
+        }
+
+        function createTranslatePopup(selectedText, rect) {
+            clearTranslatePopup();
+
+            const popup = document.createElement('div');
+            popup.className = 'translate-popup';
+            popup.id = 'translate-popup';
+
+            const scrollTop = window.scrollY;
+            const scrollLeft = window.scrollX;
+            const spaceAbove = rect.top;
+            const showBelow = spaceAbove < 70;
+
+            let top = showBelow
+                ? rect.bottom + scrollTop + 12
+                : rect.top + scrollTop - 60;
+            let left = rect.left + scrollLeft + (rect.width / 2);
+
+            const viewportWidth = window.innerWidth;
+            left = Math.max(100, Math.min(left, viewportWidth - 100));
+
+            if (showBelow) popup.classList.add('below');
+
+            popup.style.cssText = `
+                position: absolute;
+                top: ${top}px;
+                left: ${left}px;
+                transform: translateX(-50%);
+            `;
+
+            popup.innerHTML = `
+                <button class="translate-btn" id="do-translate">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 8l6 6M4 14h6v6M15 4h5v5M14.5 4l5 5"/>
+                        <path d="M2 5h12M9 2v6"/>
+                    </svg>
+                    翻译成中文
+                </button>
+            `;
+
+            document.body.appendChild(popup);
+            translatePopup = popup;
+
+            popup.querySelector('#do-translate').addEventListener('click', async () => {
+                const btn = popup.querySelector('#do-translate');
+                btn.disabled = true;
+                btn.textContent = '翻译中...';
+
+                try {
+                    const translation = await translateToChinese(selectedText);
+                    btn.style.display = 'none';
+
+                    const resultDiv = document.createElement('div');
+                    resultDiv.className = 'translation-result';
+                    resultDiv.textContent = translation;
+                    popup.appendChild(resultDiv);
+
+                    if (!showBelow) {
+                        const newHeight = popup.offsetHeight;
+                        popup.style.top = `${rect.top + scrollTop - newHeight - 12}px`;
+                    }
+                } catch (error) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'translation-result translation-error';
+                    errorDiv.textContent = '翻译失败，请重试';
+                    popup.appendChild(errorDiv);
+                    btn.style.display = 'none';
+                }
+            });
+        }
+
+        function handleTextSelection() {
+            setTimeout(() => {
+                const selection = window.getSelection();
+                const selectedText = selection.toString().trim();
+
+                if (selectedText.length > 0 && selectedText.length < 5000) {
+                    const range = selection.getRangeAt(0);
+                    const rect = range.getBoundingClientRect();
+                    createTranslatePopup(selectedText, rect);
+                }
+            }, 10);
+        }
+
+        (function initTranslation() {
+            const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            if (isTouchDevice) return;
+
+            document.addEventListener('mouseup', (e) => {
+                if (e.target.closest('#translate-popup')) return;
+                handleTextSelection();
+            });
+
+            document.addEventListener('mousedown', (e) => {
+                if (!e.target.closest('#translate-popup')) {
+                    clearTranslatePopup();
+                }
+            });
+
+            document.addEventListener('selectstart', clearTranslatePopup);
+            document.addEventListener('scroll', clearTranslatePopup);
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    clearTranslatePopup();
+                    window.getSelection().removeAllRanges();
+                }
+            });
+        })();
+    </script>
+
+    <!-- Tencent CloudBase JS SDK -->
+    <script src="https://static.cloudbase.net/cloudbase-js-sdk/latest/cloudbase.full.js"></script>
+
+    <!-- Custom Annotation System -->
+    <script src="lib/annotation.js"></script>
+</body>
+</html>

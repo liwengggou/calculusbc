@@ -426,7 +426,7 @@
         .problem-type-content {
             overflow: hidden;
             transition: max-height 0.3s ease, opacity 0.3s ease;
-            max-height: 2000px;
+            max-height: 10000px;
             opacity: 1;
         }
         .problem-type.collapsed .problem-type-content {
@@ -516,24 +516,25 @@
 
         .solution-display.visible { display: block; }
 
-        /* Level System */
-        .level-section { margin-top: 30px; }
+        /* Inline Practice (within problem types) */
+        .inline-practice {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 2px dashed var(--border-color);
+        }
 
-        .level-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .inline-practice-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-        .level-badge { padding: 8px 20px; border-radius: var(--radius-md); font-weight: 700; }
-        .level-badge.level-1 { background: var(--accent-success); color: white; }
-        .level-badge.level-2 { background: var(--accent-warning); color: white; }
-        .level-badge.level-3 { background: var(--accent-danger); color: white; }
-        .level-badge.locked { background: var(--text-muted); color: white; opacity: 0.7; }
-
-        .level-locked-msg {
-            padding: 20px;
-            background: var(--bg-tertiary);
-            border-radius: var(--radius-md);
-            text-align: center;
-            color: var(--text-muted);
-            border: 2px dashed var(--border-color);
+        .inline-practice-title::before {
+            content: '✏️';
         }
 
         /* Mistake Cards */
@@ -667,24 +668,6 @@
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { animation: fadeIn 0.3s ease-out; }
-
-        /* Progress tracker */
-        .progress-tracker {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 15px;
-            box-shadow: var(--shadow-lg);
-            z-index: 999;
-        }
-
-        .progress-tracker-title { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
-        .progress-tracker-bar { width: 150px; height: 8px; background: var(--bg-tertiary); border-radius: 4px; overflow: hidden; }
-        .progress-tracker-fill { height: 100%; background: var(--accent-success); transition: width 0.3s; }
-        .progress-tracker-text { font-size: 12px; margin-top: 5px; text-align: center; font-weight: 600; }
 
         /* ========== METHOD SELECTION FRAMEWORK ========== */
         .method-framework {
@@ -1129,9 +1112,7 @@
             .prediction-option:hover,
             .prereq-opt:hover { transform: none; }
 
-            .progress-fill,
-            .progress-tracker-fill,
-            .level-progress-fill { transition: none; }
+            .progress-fill { transition: none; }
 
             .prediction-modal-overlay,
             .prediction-modal { transition: none; }
@@ -1145,7 +1126,7 @@
             [data-theme="dark"] { --border-color: #ffffff; }
 
             .pattern-box, .exam-tip, .definition-box, .step-reasoning { border-width: 2px; }
-            .difficulty-badge, .freq-badge, .level-badge { border: 2px solid currentColor; }
+            .difficulty-badge, .freq-badge { border: 2px solid currentColor; }
         }
 
         /* ========== TRANSLATION POPUP ========== */
@@ -1233,15 +1214,6 @@
         <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 01-4.4 2.26 5.403 5.403 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
     </button>
 
-    <!-- Progress Tracker -->
-    <div class="progress-tracker" id="progress-tracker">
-        <div class="progress-tracker-title">LEVEL PROGRESS</div>
-        <div class="progress-tracker-bar">
-            <div class="progress-tracker-fill" id="level-progress-fill" style="width: 0%"></div>
-        </div>
-        <div class="progress-tracker-text" id="level-progress-text">0 / 6 correct</div>
-    </div>
-
     <div class="container">
         <!-- Header -->
         <header class="header">
@@ -1266,7 +1238,6 @@
             <button class="nav-tab" onclick="showPanel('prerequisites')">📋 Prerequisites</button>
             <button class="nav-tab" onclick="showPanel('concepts')">💡 Concepts</button>
             <button class="nav-tab" onclick="showPanel('problems')">📝 Problem Types</button>
-            <button class="nav-tab" onclick="showPanel('practice')">✏️ Practice</button>
             <button class="nav-tab" onclick="showPanel('tips')">💡 Exam Tips</button>
             <button class="nav-tab" onclick="showPanel('mistakes')">⚠️ Mistakes</button>
             <button class="nav-tab" onclick="showPanel('connections')">🔗 Connections</button>
@@ -1771,6 +1742,50 @@
                         <div class="exam-tip-label">🎯 AP Exam Tip #3</div>
                         Even with a hole at (2, 3) and a dot at (2, 5), if both sides approach 3, then \(\lim_{x \to 2} f(x) = 3\). The hole doesn't affect the limit!
                     </div>
+
+                    <!-- Inline Practice for Type 1 -->
+                    <div class="inline-practice">
+                        <h4 class="inline-practice-title">Practice This Type</h4>
+
+                        <!-- Problem 1: Basic -->
+                        <div class="practice-problem">
+                            <div class="practice-problem-header">
+                                <span class="practice-number">Problem 1</span>
+                                <span class="difficulty-badge easy">Basic</span>
+                            </div>
+                            <div class="graph-container"><div id="practice-graph-1" class="graph-plot"></div></div>
+                            <p>What is \(\displaystyle\lim_{x \to 1} f(x)\)?</p>
+                            <div class="prediction-box" id="pred-p1">
+                                <div class="prediction-options">
+                                    <div class="prediction-option" onclick="selectPred(this, 'p1')">2</div>
+                                    <div class="prediction-option" onclick="selectPred(this, 'p1')">3</div>
+                                    <div class="prediction-option" onclick="selectPred(this, 'p1')">4</div>
+                                    <div class="prediction-option" onclick="selectPred(this, 'p1')">DNE</div>
+                                </div>
+                                <button class="prediction-submit" onclick="checkPred('p1', '3')">Submit</button>
+                                <div class="prediction-feedback" id="feedback-p1"></div>
+                            </div>
+                        </div>
+
+                        <!-- Problem 5: Multi-part (intermediate) -->
+                        <div class="practice-problem">
+                            <div class="practice-problem-header">
+                                <span class="practice-number">Problem 5</span>
+                                <span class="difficulty-badge medium">Multi-part</span>
+                            </div>
+                            <div class="graph-container"><div id="practice-graph-5" class="graph-plot"></div></div>
+                            <p>Using the graph, find all values:</p>
+                            <p style="margin: 10px 0;">\(\lim_{x \to 0^-} f(x) = \) <input type="text" class="answer-input" id="ans-5a" style="width: 60px; display: inline;"></p>
+                            <p style="margin: 10px 0;">\(\lim_{x \to 0^+} f(x) = \) <input type="text" class="answer-input" id="ans-5b" style="width: 60px; display: inline;"></p>
+                            <p style="margin: 10px 0;">\(\lim_{x \to 0} f(x) = \) <input type="text" class="answer-input" id="ans-5c" style="width: 60px; display: inline;"></p>
+                            <p style="margin: 10px 0;">\(f(0) = \) <input type="text" class="answer-input" id="ans-5d" style="width: 60px; display: inline;"></p>
+                            <button class="check-answer-btn" onclick="checkMulti5()">Check All</button>
+                            <button class="show-solution-btn" onclick="toggleSol('sol-5')">Show Solution</button>
+                            <div class="solution-display" id="sol-5">
+                                <p><strong>Answers:</strong> a) 2, b) -1, c) DNE (2 ≠ -1), d) 3</p>
+                            </div>
+                        </div>
+                    </div>
                     </div>
                 </div>
 
@@ -1830,6 +1845,31 @@
                     <div class="exam-tip">
                         <div class="exam-tip-label">🎯 AP Exam Tip #4</div>
                         When left limit ≠ right limit, the two-sided limit <strong>does not exist (DNE)</strong>. Always check both sides before concluding a two-sided limit exists.
+                    </div>
+
+                    <!-- Inline Practice for Type 2 -->
+                    <div class="inline-practice">
+                        <h4 class="inline-practice-title">Practice This Type</h4>
+
+                        <!-- Problem 2: One-Sided -->
+                        <div class="practice-problem">
+                            <div class="practice-problem-header">
+                                <span class="practice-number">Problem 2</span>
+                                <span class="difficulty-badge easy">One-Sided</span>
+                            </div>
+                            <div class="graph-container"><div id="practice-graph-3" class="graph-plot"></div></div>
+                            <p>What is \(\displaystyle\lim_{x \to 2^+} f(x)\)?</p>
+                            <div class="prediction-box" id="pred-p3">
+                                <div class="prediction-options">
+                                    <div class="prediction-option" onclick="selectPred(this, 'p3')">1</div>
+                                    <div class="prediction-option" onclick="selectPred(this, 'p3')">3</div>
+                                    <div class="prediction-option" onclick="selectPred(this, 'p3')">4</div>
+                                    <div class="prediction-option" onclick="selectPred(this, 'p3')">DNE</div>
+                                </div>
+                                <button class="prediction-submit" onclick="checkPred('p3', '4')">Submit</button>
+                                <div class="prediction-feedback" id="feedback-p3"></div>
+                            </div>
+                        </div>
                     </div>
                     </div>
                 </div>
@@ -1935,6 +1975,63 @@
                         <div class="exam-tip-label">🎯 AP Exam Tip #5</div>
                         For piecewise limits: Left side uses the "x < a" formula, Right side uses the "x > a" formula. The "x = a" piece (if any) is irrelevant for the limit!
                     </div>
+
+                    <!-- Inline Practice for Type 3 -->
+                    <div class="inline-practice">
+                        <h4 class="inline-practice-title">Practice This Type</h4>
+
+                        <!-- Problem 3: Basic Piecewise -->
+                        <div class="practice-problem">
+                            <div class="practice-problem-header">
+                                <span class="practice-number">Problem 3</span>
+                                <span class="difficulty-badge easy">Piecewise</span>
+                            </div>
+                            <p>Let \(g(x) = \begin{cases} 2x + 1 & x < 3 \\ 10 & x = 3 \\ x^2 - 2 & x > 3 \end{cases}\)</p>
+                            <p>Find \(\displaystyle\lim_{x \to 3} g(x)\)</p>
+                            <div class="prediction-box" id="pred-p4">
+                                <div class="prediction-options">
+                                    <div class="prediction-option" onclick="selectPred(this, 'p4')">7</div>
+                                    <div class="prediction-option" onclick="selectPred(this, 'p4')">10</div>
+                                    <div class="prediction-option" onclick="selectPred(this, 'p4')">DNE</div>
+                                    <div class="prediction-option" onclick="selectPred(this, 'p4')">9</div>
+                                </div>
+                                <button class="prediction-submit" onclick="checkPred('p4', '7')">Submit</button>
+                                <div class="prediction-feedback" id="feedback-p4"></div>
+                            </div>
+                        </div>
+
+                        <!-- Problem 6: AP Style Continuity -->
+                        <div class="practice-problem">
+                            <div class="practice-problem-header">
+                                <span class="practice-number">Problem 6 (AP Style)</span>
+                                <span class="difficulty-badge hard">MCQ</span>
+                            </div>
+                            <p>Let f be defined as \(f(x) = \begin{cases} \frac{x^2 - 4}{x - 2} & x \neq 2 \\ k & x = 2 \end{cases}\)</p>
+                            <p>For what value of k is f continuous at x = 2?</p>
+                            <div style="margin: 15px 0;">
+                                <label style="display: block; padding: 10px; background: var(--bg-tertiary); border-radius: var(--radius-sm); margin: 5px 0; cursor: pointer;">
+                                    <input type="radio" name="q6" value="A"> (A) 0
+                                </label>
+                                <label style="display: block; padding: 10px; background: var(--bg-tertiary); border-radius: var(--radius-sm); margin: 5px 0; cursor: pointer;">
+                                    <input type="radio" name="q6" value="B"> (B) 2
+                                </label>
+                                <label style="display: block; padding: 10px; background: var(--bg-tertiary); border-radius: var(--radius-sm); margin: 5px 0; cursor: pointer;">
+                                    <input type="radio" name="q6" value="C"> (C) 4
+                                </label>
+                                <label style="display: block; padding: 10px; background: var(--bg-tertiary); border-radius: var(--radius-sm); margin: 5px 0; cursor: pointer;">
+                                    <input type="radio" name="q6" value="D"> (D) No such k exists
+                                </label>
+                            </div>
+                            <button class="check-answer-btn" onclick="checkQ6()">Check Answer</button>
+                            <button class="show-solution-btn" onclick="toggleSol('sol-6')">Show Solution</button>
+                            <div class="solution-display" id="sol-6">
+                                <p><strong>Answer: (C) 4</strong></p>
+                                <p>Factor: \(\frac{x^2-4}{x-2} = \frac{(x-2)(x+2)}{x-2} = x + 2\) for x ≠ 2</p>
+                                <p>So \(\lim_{x \to 2} f(x) = 2 + 2 = 4\)</p>
+                                <p>For continuity, need f(2) = k = limit = 4</p>
+                            </div>
+                        </div>
+                    </div>
                     </div>
                 </div>
 
@@ -2004,6 +2101,34 @@
                     <div class="exam-tip">
                         <div class="exam-tip-label">🎯 AP Exam Tip #6</div>
                         MEMORIZE: \(\lim_{x \to 0} \frac{\sin x}{x} = 1\). This fundamental limit appears frequently and is key for finding the derivative of sin(x).
+                    </div>
+
+                    <!-- Inline Practice for Type 4 -->
+                    <div class="inline-practice">
+                        <h4 class="inline-practice-title">Practice This Type</h4>
+
+                        <!-- Problem 4: Table-Based -->
+                        <div class="practice-problem">
+                            <div class="practice-problem-header">
+                                <span class="practice-number">Problem 4</span>
+                                <span class="difficulty-badge easy">Table</span>
+                            </div>
+                            <p>Use the table to estimate \(\displaystyle\lim_{x \to 2} (x^2 - 1)\)</p>
+                            <table class="limit-table">
+                                <tr><th>x</th><th>1.9</th><th>1.99</th><th>1.999</th><th>2.001</th><th>2.01</th><th>2.1</th></tr>
+                                <tr><td>f(x)</td><td>2.61</td><td>2.9601</td><td>2.996</td><td>3.004</td><td>3.0401</td><td>3.41</td></tr>
+                            </table>
+                            <div class="prediction-box" id="pred-p2">
+                                <div class="prediction-options">
+                                    <div class="prediction-option" onclick="selectPred(this, 'p2')">2</div>
+                                    <div class="prediction-option" onclick="selectPred(this, 'p2')">3</div>
+                                    <div class="prediction-option" onclick="selectPred(this, 'p2')">4</div>
+                                    <div class="prediction-option" onclick="selectPred(this, 'p2')">DNE</div>
+                                </div>
+                                <button class="prediction-submit" onclick="checkPred('p2', '3')">Submit</button>
+                                <div class="prediction-feedback" id="feedback-p2"></div>
+                            </div>
+                        </div>
                     </div>
                     </div>
                 </div>
@@ -2106,198 +2231,14 @@
                         <div class="exam-tip-label">🎯 AP Exam Tip #7</div>
                         For vertical asymptotes: If BOTH sides go to +∞, write \(\lim = +\infty\). If BOTH sides go to -∞, write \(\lim = -\infty\). If sides DISAGREE (one +∞, one -∞), the limit <strong>DNE</strong>. This is a common FRQ trap!
                     </div>
-                    </div>
-                </div>
-            </section>
-        </div>
 
-        <!-- ==================== PRACTICE ==================== -->
-        <div id="practice" class="content-panel">
-            <section class="section">
-                <h2 class="section-title"><span class="icon">✏️</span> Practice Problems</h2>
-                <p style="color: var(--text-secondary); margin-bottom: 10px;">Complete Level 1 to unlock Level 2. Track your progress!</p>
-
-                <!-- LEVEL 1 -->
-                <div class="level-section" id="level-1-section">
-                    <div class="level-header">
-                        <span class="level-badge level-1">LEVEL 1: BASIC</span>
-                        <span style="color: var(--text-secondary);">Direct Application (Complete 4/4 to unlock Level 2)</span>
+                    <!-- Inline Practice for Type 5 -->
+                    <div class="inline-practice">
+                        <h4 class="inline-practice-title">Practice This Type</h4>
+                        <p style="color: var(--text-muted); font-style: italic; padding: 20px; text-align: center; background: var(--bg-tertiary); border-radius: var(--radius-md);">
+                            Practice problems for limits involving infinity coming soon!
+                        </p>
                     </div>
-
-                    <!-- Type 1: Two-Sided Graph -->
-                    <div class="practice-type-header">
-                        <span class="type-num">Type 1</span>
-                        Two-Sided Limit from Graph
-                    </div>
-
-                    <div class="practice-problem">
-                        <div class="practice-problem-header">
-                            <span class="practice-number">Problem 1</span>
-                            <span class="difficulty-badge easy">Graph Two-Sided</span>
-                        </div>
-                        <div class="graph-container"><div id="practice-graph-1" class="graph-plot"></div></div>
-                        <p>What is \(\displaystyle\lim_{x \to 1} f(x)\)?</p>
-                        <div class="prediction-box" id="pred-p1">
-                            <div class="prediction-options">
-                                <div class="prediction-option" onclick="selectPred(this, 'p1')">2</div>
-                                <div class="prediction-option" onclick="selectPred(this, 'p1')">3</div>
-                                <div class="prediction-option" onclick="selectPred(this, 'p1')">4</div>
-                                <div class="prediction-option" onclick="selectPred(this, 'p1')">DNE</div>
-                            </div>
-                            <button class="prediction-submit" onclick="checkPred('p1', '3')">Submit</button>
-                            <div class="prediction-feedback" id="feedback-p1"></div>
-                        </div>
-                    </div>
-
-                    <!-- Type 2: One-Sided -->
-                    <div class="practice-type-header">
-                        <span class="type-num">Type 2</span>
-                        One-Sided Limits
-                    </div>
-
-                    <div class="practice-problem">
-                        <div class="practice-problem-header">
-                            <span class="practice-number">Problem 2</span>
-                            <span class="difficulty-badge easy">One-Sided</span>
-                        </div>
-                        <div class="graph-container"><div id="practice-graph-3" class="graph-plot"></div></div>
-                        <p>What is \(\displaystyle\lim_{x \to 2^+} f(x)\)?</p>
-                        <div class="prediction-box" id="pred-p3">
-                            <div class="prediction-options">
-                                <div class="prediction-option" onclick="selectPred(this, 'p3')">1</div>
-                                <div class="prediction-option" onclick="selectPred(this, 'p3')">3</div>
-                                <div class="prediction-option" onclick="selectPred(this, 'p3')">4</div>
-                                <div class="prediction-option" onclick="selectPred(this, 'p3')">DNE</div>
-                            </div>
-                            <button class="prediction-submit" onclick="checkPred('p3', '4')">Submit</button>
-                            <div class="prediction-feedback" id="feedback-p3"></div>
-                        </div>
-                    </div>
-
-                    <!-- Type 3: Piecewise -->
-                    <div class="practice-type-header">
-                        <span class="type-num">Type 3</span>
-                        Piecewise Function Limits
-                    </div>
-
-                    <div class="practice-problem">
-                        <div class="practice-problem-header">
-                            <span class="practice-number">Problem 3</span>
-                            <span class="difficulty-badge easy">Piecewise</span>
-                        </div>
-                        <p>Let \(g(x) = \begin{cases} 2x + 1 & x < 3 \\ 10 & x = 3 \\ x^2 - 2 & x > 3 \end{cases}\)</p>
-                        <p>Find \(\displaystyle\lim_{x \to 3} g(x)\)</p>
-                        <div class="prediction-box" id="pred-p4">
-                            <div class="prediction-options">
-                                <div class="prediction-option" onclick="selectPred(this, 'p4')">7</div>
-                                <div class="prediction-option" onclick="selectPred(this, 'p4')">10</div>
-                                <div class="prediction-option" onclick="selectPred(this, 'p4')">DNE</div>
-                                <div class="prediction-option" onclick="selectPred(this, 'p4')">9</div>
-                            </div>
-                            <button class="prediction-submit" onclick="checkPred('p4', '7')">Submit</button>
-                            <div class="prediction-feedback" id="feedback-p4"></div>
-                        </div>
-                    </div>
-
-                    <!-- Type 4: Table-Based -->
-                    <div class="practice-type-header">
-                        <span class="type-num">Type 4</span>
-                        Table-Based Estimation 🔥
-                    </div>
-
-                    <div class="practice-problem">
-                        <div class="practice-problem-header">
-                            <span class="practice-number">Problem 4</span>
-                            <span class="difficulty-badge easy">Table</span>
-                        </div>
-                        <p>Use the table to estimate \(\displaystyle\lim_{x \to 2} (x^2 - 1)\)</p>
-                        <table class="limit-table">
-                            <tr><th>x</th><th>1.9</th><th>1.99</th><th>1.999</th><th>2.001</th><th>2.01</th><th>2.1</th></tr>
-                            <tr><td>f(x)</td><td>2.61</td><td>2.9601</td><td>2.996</td><td>3.004</td><td>3.0401</td><td>3.41</td></tr>
-                        </table>
-                        <div class="prediction-box" id="pred-p2">
-                            <div class="prediction-options">
-                                <div class="prediction-option" onclick="selectPred(this, 'p2')">2</div>
-                                <div class="prediction-option" onclick="selectPred(this, 'p2')">3</div>
-                                <div class="prediction-option" onclick="selectPred(this, 'p2')">4</div>
-                                <div class="prediction-option" onclick="selectPred(this, 'p2')">DNE</div>
-                            </div>
-                            <button class="prediction-submit" onclick="checkPred('p2', '3')">Submit</button>
-                            <div class="prediction-feedback" id="feedback-p2"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- LEVEL 2 -->
-                <div class="level-section" id="level-2-section">
-                    <div class="level-header">
-                        <span class="level-badge level-2" id="level2-badge">LEVEL 2: INTERMEDIATE 🔒</span>
-                        <span style="color: var(--text-secondary);">Multi-step (Complete Level 1 first)</span>
-                    </div>
-                    <div class="level-locked-msg" id="level2-locked">
-                        Complete all Level 1 problems correctly to unlock Level 2.
-                    </div>
-                    <div id="level2-content" style="display: none;">
-                        <div class="practice-problem">
-                            <div class="practice-problem-header">
-                                <span class="practice-number">Problem 5</span>
-                                <span class="difficulty-badge medium">Multi-part</span>
-                            </div>
-                            <div class="graph-container"><div id="practice-graph-5" class="graph-plot"></div></div>
-                            <p>Using the graph, find all values:</p>
-                            <p style="margin: 10px 0;">\(\lim_{x \to 0^-} f(x) = \) <input type="text" class="answer-input" id="ans-5a" style="width: 60px; display: inline;"></p>
-                            <p style="margin: 10px 0;">\(\lim_{x \to 0^+} f(x) = \) <input type="text" class="answer-input" id="ans-5b" style="width: 60px; display: inline;"></p>
-                            <p style="margin: 10px 0;">\(\lim_{x \to 0} f(x) = \) <input type="text" class="answer-input" id="ans-5c" style="width: 60px; display: inline;"></p>
-                            <p style="margin: 10px 0;">\(f(0) = \) <input type="text" class="answer-input" id="ans-5d" style="width: 60px; display: inline;"></p>
-                            <button class="check-answer-btn" onclick="checkMulti5()">Check All</button>
-                            <button class="show-solution-btn" onclick="toggleSol('sol-5')">Show Solution</button>
-                            <div class="solution-display" id="sol-5">
-                                <p><strong>Answers:</strong> a) 2, b) -1, c) DNE (2 ≠ -1), d) 3</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- LEVEL 3 -->
-                <div class="level-section" id="level-3-section">
-                    <div class="level-header">
-                        <span class="level-badge level-3" id="level3-badge">LEVEL 3: AP EXAM STYLE 🔒</span>
-                        <span style="color: var(--text-secondary);">Full AP-style MCQ</span>
-                    </div>
-                    <div class="level-locked-msg" id="level3-locked">
-                        Complete Level 2 to unlock Level 3.
-                    </div>
-                    <div id="level3-content" style="display: none;">
-                        <div class="practice-problem">
-                            <div class="practice-problem-header">
-                                <span class="practice-number">Problem 6 (AP Style)</span>
-                                <span class="difficulty-badge hard">MCQ</span>
-                            </div>
-                            <p>Let f be defined as \(f(x) = \begin{cases} \frac{x^2 - 4}{x - 2} & x \neq 2 \\ k & x = 2 \end{cases}\)</p>
-                            <p>For what value of k is f continuous at x = 2?</p>
-                            <div style="margin: 15px 0;">
-                                <label style="display: block; padding: 10px; background: var(--bg-tertiary); border-radius: var(--radius-sm); margin: 5px 0; cursor: pointer;">
-                                    <input type="radio" name="q6" value="A"> (A) 0
-                                </label>
-                                <label style="display: block; padding: 10px; background: var(--bg-tertiary); border-radius: var(--radius-sm); margin: 5px 0; cursor: pointer;">
-                                    <input type="radio" name="q6" value="B"> (B) 2
-                                </label>
-                                <label style="display: block; padding: 10px; background: var(--bg-tertiary); border-radius: var(--radius-sm); margin: 5px 0; cursor: pointer;">
-                                    <input type="radio" name="q6" value="C"> (C) 4
-                                </label>
-                                <label style="display: block; padding: 10px; background: var(--bg-tertiary); border-radius: var(--radius-sm); margin: 5px 0; cursor: pointer;">
-                                    <input type="radio" name="q6" value="D"> (D) No such k exists
-                                </label>
-                            </div>
-                            <button class="check-answer-btn" onclick="checkQ6()">Check Answer</button>
-                            <button class="show-solution-btn" onclick="toggleSol('sol-6')">Show Solution</button>
-                            <div class="solution-display" id="sol-6">
-                                <p><strong>Answer: (C) 4</strong></p>
-                                <p>Factor: \(\frac{x^2-4}{x-2} = \frac{(x-2)(x+2)}{x-2} = x + 2\) for x ≠ 2</p>
-                                <p>So \(\lim_{x \to 2} f(x) = 2 + 2 = 4\)</p>
-                                <p>For continuity, need f(2) = k = limit = 4</p>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </section>
@@ -2751,9 +2692,6 @@
         }
 
         // ========== PREDICTIONS ==========
-        let correctCount = 0;
-        const totalLevel1 = 4;
-
         function selectPred(el, id) {
             document.querySelectorAll(`#pred-${id} .prediction-option`).forEach(o => o.classList.remove('selected'));
             el.classList.add('selected');
@@ -2775,11 +2713,6 @@
             if (isCorrect) {
                 feedback.textContent = '✓ Correct!';
                 feedback.className = 'prediction-feedback correct';
-                if (!container.dataset.scored) {
-                    container.dataset.scored = 'true';
-                    correctCount++;
-                    updateProgress();
-                }
             } else {
                 feedback.textContent = `✗ The answer is ${correct}`;
                 feedback.className = 'prediction-feedback incorrect';
@@ -2788,60 +2721,24 @@
             container.querySelector('.prediction-submit').disabled = true;
         }
 
-        function updateProgress() {
-            document.getElementById('level-progress-fill').style.width = `${(correctCount / 6) * 100}%`;
-            document.getElementById('level-progress-text').textContent = `${correctCount} / 6 correct`;
-            localStorage.setItem('u1.1-correct', correctCount);
-
-            if (correctCount >= totalLevel1) unlockLevel2();
-        }
-
-        function unlockLevel2() {
-            document.getElementById('level2-badge').textContent = 'LEVEL 2: INTERMEDIATE';
-            document.getElementById('level2-badge').classList.remove('locked');
-            document.getElementById('level2-locked').style.display = 'none';
-            document.getElementById('level2-content').style.display = 'block';
-            setTimeout(initGraphs, 100);
-        }
-
         function checkMulti5() {
             const answers = { '5a': '2', '5b': '-1', '5c': 'dne', '5d': '3' };
-            let allCorrect = true;
             Object.entries(answers).forEach(([id, ans]) => {
                 const input = document.getElementById(`ans-${id}`);
                 const correct = input.value.trim().toLowerCase() === ans.toLowerCase();
                 input.style.borderColor = correct ? 'var(--accent-success)' : 'var(--accent-danger)';
-                if (!correct) allCorrect = false;
             });
-            if (allCorrect && !document.getElementById('level2-content').dataset.scored) {
-                document.getElementById('level2-content').dataset.scored = 'true';
-                correctCount++;
-                updateProgress();
-                unlockLevel3();
-            }
-        }
-
-        function unlockLevel3() {
-            document.getElementById('level3-badge').textContent = 'LEVEL 3: AP EXAM STYLE';
-            document.getElementById('level3-badge').classList.remove('locked');
-            document.getElementById('level3-locked').style.display = 'none';
-            document.getElementById('level3-content').style.display = 'block';
         }
 
         function checkQ6() {
             const selected = document.querySelector('input[name="q6"]:checked');
             if (!selected) { alert('Select an answer!'); return; }
-            const labels = document.querySelectorAll('#level3-content label');
+            const labels = selected.closest('.practice-problem').querySelectorAll('label');
             labels.forEach(l => {
                 const inp = l.querySelector('input');
                 if (inp.value === 'C') { l.style.background = 'rgba(16,185,129,0.2)'; l.style.border = '2px solid var(--accent-success)'; }
                 else if (inp === selected && inp.value !== 'C') { l.style.background = 'rgba(239,68,68,0.2)'; l.style.border = '2px solid var(--accent-danger)'; }
             });
-            if (selected.value === 'C' && !document.getElementById('level3-content').dataset.q6scored) {
-                document.getElementById('level3-content').dataset.q6scored = 'true';
-                correctCount++;
-                updateProgress();
-            }
             document.getElementById('sol-6').classList.add('visible');
         }
 
@@ -3015,14 +2912,12 @@
 
         // ========== INIT ==========
         document.addEventListener('DOMContentLoaded', () => {
-            const saved = localStorage.getItem('u1.1-correct');
-            if (saved) { correctCount = parseInt(saved); updateProgress(); }
-
             Object.keys(animations).forEach(id => updateAnimDisplay(id));
 
             // Accordion toggle for Problem Types
             document.querySelectorAll('#problem-type-1 .problem-type-header, #problem-type-2 .problem-type-header, #problem-type-3 .problem-type-header, #problem-type-4 .problem-type-header, #problem-type-5 .problem-type-header').forEach(header => {
                 header.addEventListener('click', () => {
+                    const scrollPos = window.scrollY;  // Save scroll position
                     const parent = header.parentElement;
                     const wasCollapsed = parent.classList.contains('collapsed');
 
@@ -3034,7 +2929,14 @@
                     // If it was collapsed, expand it
                     if (wasCollapsed) {
                         parent.classList.remove('collapsed');
+                        // Re-render graphs after accordion expands (for practice problems inside)
+                        setTimeout(initGraphs, 100);
                     }
+
+                    // Restore scroll position after DOM update
+                    requestAnimationFrame(() => {
+                        window.scrollTo(0, scrollPos);
+                    });
                 });
             });
 
