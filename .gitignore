@@ -1,1 +1,6 @@
 .claude/
+.vercel
+.env
+node_modules/
+cloudbaserc.json
+functions/*/node_modules/

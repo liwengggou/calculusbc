@@ -1,0 +1,9 @@
+{
+  "name": "translate",
+  "version": "1.0.0",
+  "description": "CloudBase cloud function for Tencent Translation API",
+  "main": "index.js",
+  "dependencies": {
+    "tencentcloud-sdk-nodejs": "^4.1.168"
+  }
+}
