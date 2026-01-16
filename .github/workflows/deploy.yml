@@ -26,14 +26,72 @@ jobs:
           cd ../translate && npm install
           cd ../setup-db && npm install
 
+      - name: Create CloudBase config
+        run: |
+          cat > cloudbaserc.json << 'EOF'
+          {
+            "envId": "${{ secrets.TCB_ENV_ID }}",
+            "version": "2.0",
+            "functionRoot": "functions",
+            "functions": [
+              {
+                "name": "translate",
+                "config": {
+                  "runtime": "Nodejs16.13",
+                  "handler": "index.main",
+                  "timeout": 10,
+                  "memorySize": 256,
+                  "envVariables": {
+                    "TENCENT_SECRET_ID": "${{ secrets.TENCENT_SECRET_ID }}",
+                    "TENCENT_SECRET_KEY": "${{ secrets.TENCENT_SECRET_KEY }}"
+                  }
+                }
+              },
+              {
+                "name": "annotations",
+                "config": {
+                  "runtime": "Nodejs16.13",
+                  "handler": "index.main",
+                  "timeout": 10,
+                  "memorySize": 256,
+                  "envVariables": {
+                    "MYSQL_HOST": "${{ secrets.MYSQL_HOST }}",
+                    "MYSQL_PORT": "3306",
+                    "MYSQL_USER": "${{ secrets.MYSQL_USER }}",
+                    "MYSQL_PASSWORD": "${{ secrets.MYSQL_PASSWORD }}",
+                    "MYSQL_DATABASE": "${{ secrets.TCB_ENV_ID }}"
+                  }
+                }
+              },
+              {
+                "name": "setup-db",
+                "config": {
+                  "runtime": "Nodejs16.13",
+                  "handler": "index.main",
+                  "timeout": 30,
+                  "memorySize": 256,
+                  "envVariables": {
+                    "MYSQL_HOST": "${{ secrets.MYSQL_HOST }}",
+                    "MYSQL_PORT": "3306",
+                    "MYSQL_USER": "${{ secrets.MYSQL_USER }}",
+                    "MYSQL_PASSWORD": "${{ secrets.MYSQL_PASSWORD }}",
+                    "MYSQL_DATABASE": "${{ secrets.TCB_ENV_ID }}"
+                  }
+                }
+              }
+            ]
+          }
+          EOF
+          cat cloudbaserc.json
+
       - name: Login and Deploy to CloudBase
         run: |
           tcb login --apiKeyId ${{ secrets.TENCENT_SECRET_ID }} --apiKey ${{ secrets.TENCENT_SECRET_KEY }}
 
           # Deploy cloud functions
-          tcb fn deploy annotations -e ${{ secrets.TCB_ENV_ID }}
-          tcb fn deploy translate -e ${{ secrets.TCB_ENV_ID }}
-          tcb fn deploy setup-db -e ${{ secrets.TCB_ENV_ID }}
+          tcb fn deploy annotations --force
+          tcb fn deploy translate --force
+          tcb fn deploy setup-db --force
 
           # Deploy static files
           mkdir -p dist
