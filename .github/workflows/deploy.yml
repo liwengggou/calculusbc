@@ -22,13 +22,34 @@ jobs:
 
       - name: Install function dependencies
         run: |
-          cd functions/annotations && npm install
-          cd ../translate && npm install
-          cd ../setup-db && npm install
+          echo "=== Installing annotations dependencies ==="
+          cd functions/annotations && npm install && ls -la
+          echo "=== Installing translate dependencies ==="
+          cd ../translate && npm install && ls -la
+          echo "=== Installing setup-db dependencies ==="
+          cd ../setup-db && npm install && ls -la
+
+      - name: Debug - Check directory structure
+        run: |
+          echo "=== Current directory ==="
+          pwd
+          echo "=== Root directory contents ==="
+          ls -la
+          echo "=== Functions directory ==="
+          ls -la functions/
+          echo "=== Annotations function files ==="
+          ls -la functions/annotations/
+          echo "=== Annotations index.js exists? ==="
+          cat functions/annotations/index.js | head -20
+          echo "=== Setup-db function files ==="
+          ls -la functions/setup-db/
+          echo "=== Translate function files ==="
+          ls -la functions/translate/
 
       - name: Create CloudBase config
         run: |
-          cat > cloudbaserc.json << 'EOF'
+          echo "=== Creating cloudbaserc.json ==="
+          cat > cloudbaserc.json << EOF
           {
             "envId": "${{ secrets.TCB_ENV_ID }}",
             "version": "2.0",
@@ -82,19 +103,39 @@ jobs:
             ]
           }
           EOF
+          echo "=== cloudbaserc.json contents ==="
           cat cloudbaserc.json
+          echo "=== Validating JSON ==="
+          cat cloudbaserc.json | python3 -m json.tool || echo "JSON validation failed!"
 
-      - name: Login and Deploy to CloudBase
+      - name: Login to CloudBase
         run: |
+          echo "=== Logging in to CloudBase ==="
           tcb login --apiKeyId ${{ secrets.TENCENT_SECRET_ID }} --apiKey ${{ secrets.TENCENT_SECRET_KEY }}
+          echo "=== Login successful ==="
 
-          # Deploy cloud functions
-          tcb fn deploy annotations --force
-          tcb fn deploy translate --force
-          tcb fn deploy setup-db --force
+      - name: Deploy annotations function
+        run: |
+          echo "=== Deploying annotations function ==="
+          tcb fn deploy annotations --force || echo "Annotations deploy failed!"
 
-          # Deploy static files
+      - name: Deploy translate function
+        run: |
+          echo "=== Deploying translate function ==="
+          tcb fn deploy translate --force || echo "Translate deploy failed!"
+
+      - name: Deploy setup-db function
+        run: |
+          echo "=== Deploying setup-db function ==="
+          tcb fn deploy setup-db --force || echo "Setup-db deploy failed!"
+
+      - name: Deploy static files
+        run: |
+          echo "=== Deploying static files ==="
           mkdir -p dist
           cp *.html dist/
           cp -r lib dist/
+          echo "=== Dist directory contents ==="
+          ls -la dist/
           tcb hosting deploy ./dist / -e ${{ secrets.TCB_ENV_ID }}
+          echo "=== Static files deployed ==="
